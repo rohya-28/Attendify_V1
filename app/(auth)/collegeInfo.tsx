@@ -1,50 +1,54 @@
 import CustomButton from "@/components/CustomButton";
 import InputField from "@/components/InputField";
 import { icons, images } from "@/constants";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { View, Text, Image, Alert } from "react-native";
 import { ScrollView } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { useUserLocation } from "@/hooks/useUserLocation"; // Import the useLocation hook
+import { useUserLocation } from "@/hooks/useUserLocation";
 import authService from "@/api/authService";
+import { Formik } from "formik";
+import * as Yup from "yup";
+
+// Define the interface for the form values
+interface CollegeInfoFormValues {
+  name: string;
+  address: string;
+  latitude: string;
+  longitude: string;
+}
+
+// Validation schema for College Info
+const collegeInfoSchema = Yup.object().shape({
+  name: Yup.string().required("College name is required"),
+  address: Yup.string().required("Address is required"),
+  latitude: Yup.number()
+    .typeError("Latitude must be a number")
+    .required("Latitude is required"),
+  longitude: Yup.number()
+    .typeError("Longitude must be a number")
+    .required("Longitude is required"),
+});
 
 const CollegeInfo = () => {
-  const [form, setForm] = useState({
-    name: "",
-    address: "",
-    latitude: "",
-    longitude: "",
-  });
-
   const { location, errorMsg, loading } = useUserLocation();
 
   useEffect(() => {
-    if (location) {
-      // Automatically populate latitude and longitude when location is available
-      setForm((prevForm) => ({
-        ...prevForm,
-        latitude: location.coords.latitude.toString(),
-        longitude: location.coords.longitude.toString(),
-      }));
-    }
     if (errorMsg) {
       Alert.alert("Error", errorMsg);
     }
   }, [location, errorMsg]);
 
-  const onRegisterPress = async () => {
-    console.log(form); // Log the form data for debugging
+  const onRegisterPress = async (values: CollegeInfoFormValues) => {
+    console.log(values); // Log the form data for debugging
 
     try {
-      const formData = { ...form }; // Prepare the form data
-      const response = await authService.submitCollegeInfo(formData);
+      const response = await authService.submitCollegeInfo(values);
       console.log("College Registration Successful:", response);
 
       Alert.alert("Success", "College Registered Successfully!");
     } catch (error) {
       console.error("College Registration Failed:", error);
-
-      // Handle error, e.g., show an error message to the user
       Alert.alert("Error", "Failed to register the college. Please try again.");
     }
   };
@@ -64,57 +68,92 @@ const CollegeInfo = () => {
               </Text>
             </View>
 
-            <View className="p-5">
-              <InputField
-                label="College Name"
-                placeholder="Enter College Name"
-                icon={icons.person}
-                value={form.name}
-                onChangeText={(value) =>
-                  setForm((prevForm) => ({ ...prevForm, name: value }))
-                }
-              />
-              <InputField
-                label="Address"
-                placeholder="Enter Address"
-                icon={icons.home}
-                value={form.address}
-                onChangeText={(value) =>
-                  setForm((prevForm) => ({ ...prevForm, address: value }))
-                }
-              />
-              <InputField
-                label="Latitude"
-                placeholder="Latitude"
-                icon={icons.map}
-                value={form.latitude}
-                keyboardType="numeric"
-                onChangeText={(value) =>
-                  setForm((prevForm) => ({ ...prevForm, latitude: value }))
-                }
-                editable={!loading} // Disable if loading location
-              />
-              <InputField
-                label="Longitude"
-                placeholder="Longitude"
-                icon={icons.map}
-                value={form.longitude}
-                keyboardType="numeric"
-                onChangeText={(value) =>
-                  setForm((prevForm) => ({ ...prevForm, longitude: value }))
-                }
-                editable={!loading} // Disable if loading location
-              />
-              {loading ? (
-                <Text>Loading location...</Text>
-              ) : (
-                <CustomButton
-                  title="Register"
-                  onPress={onRegisterPress}
-                  className="mt-4"
-                />
+            <Formik<CollegeInfoFormValues>
+              initialValues={{
+                name: "",
+                address: "",
+                latitude: location ? location.coords.latitude.toString() : "",
+                longitude: location ? location.coords.longitude.toString() : "",
+              }}
+              validationSchema={collegeInfoSchema}
+              onSubmit={onRegisterPress}
+              enableReinitialize
+            >
+              {({
+                handleChange,
+                handleBlur,
+                handleSubmit,
+                values,
+                errors,
+                touched,
+              }) => (
+                <View className="p-5">
+                  <InputField
+                    label="College Name"
+                    placeholder="Enter College Name"
+                    icon={icons.person}
+                    value={values.name}
+                    onChangeText={handleChange("name")}
+                    onBlur={handleBlur("name")}
+                    error={
+                      touched.name && errors.name ? errors.name : undefined
+                    }
+                  />
+                  <InputField
+                    label="Address"
+                    placeholder="Enter Address"
+                    icon={icons.home}
+                    value={values.address}
+                    onChangeText={handleChange("address")}
+                    onBlur={handleBlur("address")}
+                    error={
+                      touched.address && errors.address
+                        ? errors.address
+                        : undefined
+                    }
+                  />
+                  <InputField
+                    label="Latitude"
+                    placeholder="Latitude"
+                    icon={icons.map}
+                    value={values.latitude}
+                    keyboardType="numeric"
+                    onChangeText={handleChange("latitude")}
+                    onBlur={handleBlur("latitude")}
+                    error={
+                      touched.latitude && errors.latitude
+                        ? errors.latitude
+                        : undefined
+                    }
+                    editable={!loading}
+                  />
+                  <InputField
+                    label="Longitude"
+                    placeholder="Longitude"
+                    icon={icons.map}
+                    value={values.longitude}
+                    keyboardType="numeric"
+                    onChangeText={handleChange("longitude")}
+                    onBlur={handleBlur("longitude")}
+                    error={
+                      touched.longitude && errors.longitude
+                        ? errors.longitude
+                        : undefined
+                    }
+                    editable={!loading}
+                  />
+                  {loading ? (
+                    <Text>Loading location...</Text>
+                  ) : (
+                    <CustomButton
+                      title="Register"
+                      onPress={handleSubmit as any}
+                      className="mt-4"
+                    />
+                  )}
+                </View>
               )}
-            </View>
+            </Formik>
           </View>
         </View>
       </ScrollView>

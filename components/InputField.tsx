@@ -20,6 +20,7 @@ const InputField = ({
   inputStyle,
   iconStyle,
   className,
+  error, // The error prop
   ...props
 }: InputFieldProps) => {
   return (
@@ -32,7 +33,9 @@ const InputField = ({
             {label}
           </Text>
           <View
-            className={`flex flex-row justify-start items-center relative bg-neutral-100 rounded-md border border-neutral-100 focus:border-primary-500  ${containerStyle}`}
+            className={`flex flex-row justify-start items-center relative bg-neutral-100 rounded-md border ${
+              error ? "border-red-500" : "border-neutral-100"
+            } focus:border-primary-500 ${containerStyle}`}
           >
             {icon && (
               <Image source={icon} className={`w-6 h-6 ml-4 ${iconStyle}`} />
@@ -43,6 +46,12 @@ const InputField = ({
               {...props}
             />
           </View>
+          {/* Error message display */}
+          {error && (
+            <Text className="text-red-500 text-xs mt-1 font-JakartaRegular">
+              {error}
+            </Text>
+          )}
         </View>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>

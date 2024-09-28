@@ -2,19 +2,25 @@ import CustomButton from "@/components/CustomButton";
 import InputField from "@/components/InputField";
 import { icons, images } from "@/constants";
 import { Link } from "expo-router";
-import { useState } from "react";
 import { View, Text, Image } from "react-native";
 import { ScrollView } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { Formik, FormikValues } from "formik";
+import * as Yup from "yup";
+
+// Validation schema for Sign In
+const signInSchema = Yup.object().shape({
+  email: Yup.string()
+    .email("Invalid email address")
+    .required("Email is required"),
+  password: Yup.string()
+    .min(8, "Password must be at least 8 characters")
+    .required("Password is required"),
+});
 
 const Sign_In = () => {
-  const [form, setForm] = useState({
-    email: '',
-    password: '',
-  });
-
-  const onSignInPress = async () => {
-    console.log(form);
+  const onSignInPress = async (values: FormikValues) => {
+    console.log(values);
     // Add your sign-in logic here
   };
 
@@ -33,29 +39,63 @@ const Sign_In = () => {
               </Text>
             </View>
 
-            <View className="p-5">
-              <InputField
-                label="Email"
-                placeholder="Enter Email"
-                icon={icons.email}
-                value={form.email}
-                onChangeText={(value) => setForm({ ...form, email: value })}
-              />
-              <InputField
-                label="Password"
-                placeholder="Enter Password"
-                icon={icons.lock}
-                value={form.password}
-                secureTextEntry={true}
-                onChangeText={(value) => setForm({ ...form, password: value })}
-              />
-              <CustomButton title="Sign In" onPress={onSignInPress} className="mt-4" />
+            <Formik
+              initialValues={{ email: "", password: "" }}
+              validationSchema={signInSchema}
+              onSubmit={onSignInPress}
+            >
+              {({
+                handleChange,
+                handleBlur,
+                handleSubmit,
+                values,
+                errors,
+                touched,
+              }) => (
+                <View className="p-5">
+                  <InputField
+                    label="Email"
+                    placeholder="Enter Email"
+                    icon={icons.email}
+                    value={values.email}
+                    onChangeText={handleChange("email")}
+                    onBlur={handleBlur("email")}
+                    error={
+                      touched.email && errors.email ? errors.email : undefined
+                    }
+                  />
 
-              <Link href="/(auth)/collegeInfo" className="font-JakartaSemiBold text-[15px] text-general-200 mt-8 text-center">
-                <Text>Don't have an Account? </Text>
-                <Text className="text-primary-500">Sign Up</Text>
-              </Link>
-            </View>
+                  <InputField
+                    label="Password"
+                    placeholder="Enter Password"
+                    icon={icons.lock}
+                    value={values.password}
+                    secureTextEntry={true}
+                    onChangeText={handleChange("password")}
+                    onBlur={handleBlur("password")}
+                    error={
+                      touched.password && errors.password
+                        ? errors.password
+                        : undefined
+                    }
+                  />
+
+                  <CustomButton
+                    title="Sign In"
+                    onPress={handleSubmit as any}
+                    className="mt-4"
+                  />
+
+                  <Link
+                    href="/(auth)/collegeInfo"
+                    className="font-JakartaSemiBold text-[15px] text-general-200 mt-8 text-center"
+                  >
+                    <Text>Don't have an Account? </Text>
+                    <Text className="text-primary-500">Sign Up</Text>
+                  </Link>
+                </View>
+              )}
+            </Formik>
           </View>
         </View>
       </ScrollView>
