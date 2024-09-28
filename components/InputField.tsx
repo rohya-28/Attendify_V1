@@ -29,9 +29,15 @@ const InputField = ({
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View className="my-2 w-full">
-          <Text className={`text-sm font-JakartaSemiBold mb-3 ${labelStyle}`}>
-            {label}
-          </Text>
+          <View>
+            {label ? (
+              <Text className={`text-sm font-JakartaLight mb-3 ${labelStyle}`}>
+                {label}
+              </Text>
+            ) : (
+              <View style={{ height: 0, opacity: 0 }} /> // Occupies no space if label is empty
+            )}
+          </View>
           <View
             className={`flex flex-row justify-start items-center relative bg-neutral-100 rounded-md border ${
               error ? "border-red-500" : "border-neutral-100"

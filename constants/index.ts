@@ -25,6 +25,8 @@ import target from "@/assets/icons/target.png";
 import to from "@/assets/icons/to.png";
 import onBoarding from "@/assets/images/icon.png";
 import signUpCar from "@/assets/images/signup-car.png";
+import invite from "@/assets/icons/link.png";
+import chart from "@/assets/icons/pie-chart.png";
 
 export const images = {
   onBoarding,
@@ -32,6 +34,8 @@ export const images = {
 };
 
 export const icons = {
+  chart,
+  invite,
   arrowDown,
   arrowUp,
   backArrow,
