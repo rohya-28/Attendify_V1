@@ -3,14 +3,19 @@ import { View, Text, TouchableOpacity } from "react-native";
 
 interface ToggleButtonProps {
   role: "student" | "admin";
+  label: string;
   onToggle: () => void;
 }
 
-const ToggleButton: React.FC<ToggleButtonProps> = ({ role, onToggle }) => {
+const ToggleButton: React.FC<ToggleButtonProps> = ({
+  role,
+  onToggle,
+  label,
+}) => {
   return (
     <View className="my-2 w-full">
       {/* Label */}
-      <Text className="text-sm font-JakartaSemiBold mb-3">Role</Text>
+      <Text className="text-sm font-JakartaSemiBold mb-3">{label}</Text>
 
       {/* Toggle Button */}
       <View className="flex flex-row rounded-sm overflow-hidden border border-neutral-100">

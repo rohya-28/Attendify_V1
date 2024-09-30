@@ -188,7 +188,7 @@ const Sign_Up = () => {
                   />
 
                   {/* Toggle Button for Role */}
-                  <ToggleButton role={role} onToggle={toggleRole} />
+                  <ToggleButton label="" role={role} onToggle={toggleRole} />
 
                   {/* Submit Button */}
                   <CustomButton
