@@ -27,10 +27,18 @@ import onBoarding from "@/assets/images/icon.png";
 import signUpCar from "@/assets/images/signup-car.png";
 import invite from "@/assets/icons/link.png";
 import chart from "@/assets/icons/pie-chart.png";
+import realtime from "@/assets/images/realtime.webp";
+import compareReport from "@/assets/images/compre-report.webp";
+import Track from "@/assets/images/reack-attendance.webp";
+import signUpbg from "@/assets/images/signup-bg.webp";
 
 export const images = {
   onBoarding,
   signUpCar,
+  realtime,
+  compareReport,
+  Track,
+  signUpbg,
 };
 
 export const icons = {
@@ -68,22 +76,22 @@ export const onboarding = [
     id: 1,
     title: "Track Attendance Effortlessly!",
     description:
-      "Stay organized with our easy-to-use attendance tracker. Never miss a presence again!",
-    image: images.onBoarding, // replace with your relevant image
+      "Stay organized Track our easy-to-use attendance tracker. Never miss a presence again!",
+    image: images.Track, // replace with your relevant image
   },
   {
     id: 2,
     title: "Real-Time Updates",
     description:
       "Get instant notifications and updates on attendance status to keep everyone informed.",
-    image: images.onBoarding, // replace with your relevant image
+    image: images.realtime, // replace with your relevant image
   },
   {
     id: 3,
     title: "Comprehensive Reports",
     description:
       "Generate detailed attendance reports with just a few taps to analyze attendance trends.",
-    image: images.onBoarding, // replace with your relevant image
+    image: images.compareReport, // replace with your relevant image
   },
 ];
 
