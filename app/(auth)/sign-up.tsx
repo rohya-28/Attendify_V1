@@ -65,7 +65,7 @@ const Sign_Up = () => {
           <View>
             <View className="relative w-full h-[250px]">
               <Image
-                source={images.signUpCar}
+                source={images.signUpbg}
                 className="z-0 w-full h-[250px]"
               />
 
