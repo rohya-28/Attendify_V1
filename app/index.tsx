@@ -4,8 +4,8 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 const Home = () => {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      {/* <Redirect href="/(root)/(tabs)/home" /> */}
-      <Redirect href="/(auth)/welcome" />
+      <Redirect href="/(root)/(tabs)/home" />
+      {/* <Redirect href="/(auth)/welcome" /> */}
     </GestureHandlerRootView>
   );
 };

@@ -1,5 +1,10 @@
 import { Tabs } from "expo-router";
-import { Image, ImageSourcePropType, View } from "react-native";
+import {
+  Image,
+  ImageSourcePropType,
+  KeyboardAvoidingView,
+  View,
+} from "react-native";
 
 import { icons } from "@/constants";
 
@@ -28,67 +33,71 @@ const TabIcon = ({
 
 export default function Layout() {
   return (
-    <Tabs
-      initialRouteName="index"
-      screenOptions={{
-        tabBarActiveTintColor: "white",
-        tabBarInactiveTintColor: "white",
-        tabBarShowLabel: false,
-        tabBarStyle: {
-          backgroundColor: "#0C0C0C",
-          borderRadius: 30,
-          overflow: "hidden",
-          marginHorizontal: 20,
-          marginBottom: 20,
-          height: 78,
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          flexDirection: "row",
-          position: "absolute",
-        },
-      }}
-    >
-      <Tabs.Screen
-        name="home"
-        options={{
-          title: "Home",
-          headerShown: false,
-          tabBarIcon: ({ focused }) => (
-            <TabIcon source={icons.home} focused={focused} />
-          ),
+    <KeyboardAvoidingView style={{ flex: 1 }}>
+      <Tabs
+        initialRouteName="index"
+        screenOptions={{
+          tabBarActiveTintColor: "white",
+          tabBarInactiveTintColor: "white",
+          tabBarHideOnKeyboard: true,
+          tabBarShowLabel: false,
+          tabBarStyle: {
+            backgroundColor: "#0C0C0C",
+            borderRadius: 30,
+            paddingBottom: 0,
+            overflow: "hidden",
+            marginHorizontal: 20,
+            marginBottom: 20,
+            height: 78,
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            flexDirection: "row",
+            position: "absolute",
+          },
         }}
-      />
-      <Tabs.Screen
-        name="invite"
-        options={{
-          title: "Invite",
-          headerShown: false,
-          tabBarIcon: ({ focused }) => (
-            <TabIcon source={icons.invite} focused={focused} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="report"
-        options={{
-          title: "Profile",
-          headerShown: false,
-          tabBarIcon: ({ focused }) => (
-            <TabIcon source={icons.chart} focused={focused} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="profile"
-        options={{
-          title: "Profile",
-          headerShown: false,
-          tabBarIcon: ({ focused }) => (
-            <TabIcon source={icons.person} focused={focused} />
-          ),
-        }}
-      />
-    </Tabs>
+      >
+        <Tabs.Screen
+          name="home"
+          options={{
+            title: "Home",
+            headerShown: false,
+            tabBarIcon: ({ focused }) => (
+              <TabIcon source={icons.home} focused={focused} />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="invite"
+          options={{
+            title: "Invite",
+            headerShown: false,
+            tabBarIcon: ({ focused }) => (
+              <TabIcon source={icons.invite} focused={focused} />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="report"
+          options={{
+            title: "Profile",
+            headerShown: false,
+            tabBarIcon: ({ focused }) => (
+              <TabIcon source={icons.chart} focused={focused} />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="profile"
+          options={{
+            title: "Profile",
+            headerShown: false,
+            tabBarIcon: ({ focused }) => (
+              <TabIcon source={icons.person} focused={focused} />
+            ),
+          }}
+        />
+      </Tabs>
+    </KeyboardAvoidingView>
   );
 }
