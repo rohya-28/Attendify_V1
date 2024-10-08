@@ -7,6 +7,13 @@ import { ScrollView } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Formik, FormikValues } from "formik";
 import * as Yup from "yup";
+import authService from "@/api/authService";
+
+// Define the type for form values
+interface SignInFormValues {
+  email: string;
+  password: string;
+}
 
 // Validation schema for Sign In
 const signInSchema = Yup.object().shape({
@@ -19,9 +26,21 @@ const signInSchema = Yup.object().shape({
 });
 
 const Sign_In = () => {
-  const onSignInPress = async (values: FormikValues) => {
-    console.log(values);
-    // Add your sign-in logic here
+  const onSignInPress = async (values: SignInFormValues) => {
+    console.log("Form data sent:", values);
+    const response = await authService.signIn(values);
+    console.log("Sign In Successful:", response);
+    try {
+      // const response = await authService.signIn(values);
+      // console.log("Sign In Successful:", response);
+      // Handle success, e.g., navigate to another page or show a success message
+    } catch (error: any) {
+      if (error.response) {
+        console.error("Error signing in:", error.response.data);
+      } else {
+        console.error("Sign In Failed:", error.message);
+      }
+    }
   };
 
   return (
@@ -39,7 +58,7 @@ const Sign_In = () => {
               </Text>
             </View>
 
-            <Formik
+            <Formik<SignInFormValues>
               initialValues={{ email: "", password: "" }}
               validationSchema={signInSchema}
               onSubmit={onSignInPress}
@@ -51,6 +70,7 @@ const Sign_In = () => {
                 values,
                 errors,
                 touched,
+                isSubmitting, // Added to manage the button disabled state
               }) => (
                 <View className="p-5">
                   <InputField
@@ -82,8 +102,9 @@ const Sign_In = () => {
 
                   <CustomButton
                     title="Sign In"
-                    onPress={handleSubmit as any}
+                    onPress={handleSubmit}
                     className="mt-4"
+                    // disabled={isSubmitting} // Disable button while form is submitting
                   />
 
                   <Link

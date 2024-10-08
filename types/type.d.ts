@@ -19,3 +19,12 @@ declare interface InputFieldProps extends TextInputProps {
   className?: string;
   error?: string;
 }
+
+export interface UserProfile {
+  id: string;
+  name: string;
+  email: string;
+  password: string;
+  profilePicture?: string;
+  role: `'ADMIN' | 'STUDENT'`;
+}

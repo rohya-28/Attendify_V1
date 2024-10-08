@@ -44,7 +44,6 @@ export default function Layout() {
           tabBarStyle: {
             backgroundColor: "#0C0C0C",
             borderRadius: 30,
-            paddingBottom: 0,
             overflow: "hidden",
             marginHorizontal: 20,
             marginBottom: 20,
