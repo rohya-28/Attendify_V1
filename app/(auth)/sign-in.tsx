@@ -4,10 +4,11 @@ import { icons, images } from '@/constants'
 import { Link } from 'expo-router'
 import { View, Text, Image } from 'react-native'
 import { ScrollView } from 'react-native'
-import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import { GestureHandlerRootView, State } from 'react-native-gesture-handler'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
 import authService from '@/api/authService'
+import useAuthStore from '@/store/useAuthStore'
 
 // Define the type for form values
 interface SignInFormValues {
@@ -26,14 +27,13 @@ const signInSchema = Yup.object().shape({
 })
 
 const Sign_In = () => {
+  const setToken = useAuthStore((State) => State.setToken)
   const onSignInPress = async (values: SignInFormValues) => {
-    console.log('Form data sent:', values)
-    const response = await authService.signIn(values)
-    console.log('Sign In Successful:', response)
     try {
-      // const response = await authService.signIn(values);
-      // console.log("Sign In Successful:", response);
-      // Handle success, e.g., navigate to another page or show a success message
+      const response = await authService.signIn(values)
+      console.log('Sign In Successful:', response)
+      const _accessToken = response.accessToken
+      setToken(_accessToken)
     } catch (error: any) {
       if (error.response) {
         console.error('Error signing in:', error.response.data)
