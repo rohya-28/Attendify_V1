@@ -1,57 +1,57 @@
-import CustomButton from "@/components/CustomButton";
-import InputField from "@/components/InputField";
-import { icons, images } from "@/constants";
-import { useEffect } from "react";
-import { View, Text, Image, Alert } from "react-native";
-import { ScrollView } from "react-native";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { useUserLocation } from "@/hooks/useUserLocation";
-import authService from "@/api/authService";
-import { Formik } from "formik";
-import * as Yup from "yup";
+import CustomButton from '@/components/CustomButton'
+import InputField from '@/components/InputField'
+import { icons, images } from '@/constants'
+import { useEffect } from 'react'
+import { View, Text, Image, Alert } from 'react-native'
+import { ScrollView } from 'react-native'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import { useUserLocation } from '@/hooks/useUserLocation'
+import authService from '@/api/authService'
+import { Formik } from 'formik'
+import * as Yup from 'yup'
 
 // Define the interface for the form values
 interface CollegeInfoFormValues {
-  name: string;
-  address: string;
-  latitude: string;
-  longitude: string;
+  name: string
+  address: string
+  latitude: string
+  longitude: string
 }
 
 // Validation schema for College Info
 const collegeInfoSchema = Yup.object().shape({
-  name: Yup.string().required("College name is required"),
-  address: Yup.string().required("Address is required"),
+  name: Yup.string().required('College name is required'),
+  address: Yup.string().required('Address is required'),
   latitude: Yup.number()
-    .typeError("Latitude must be a number")
-    .required("Latitude is required"),
+    .typeError('Latitude must be a number')
+    .required('Latitude is required'),
   longitude: Yup.number()
-    .typeError("Longitude must be a number")
-    .required("Longitude is required"),
-});
+    .typeError('Longitude must be a number')
+    .required('Longitude is required'),
+})
 
 const CollegeInfo = () => {
-  const { location, errorMsg, loading } = useUserLocation();
+  const { location, errorMsg, loading } = useUserLocation()
 
   useEffect(() => {
     if (errorMsg) {
-      Alert.alert("Error", errorMsg);
+      Alert.alert('Error', errorMsg)
     }
-  }, [location, errorMsg]);
+  }, [location, errorMsg])
 
   const onRegisterPress = async (values: CollegeInfoFormValues) => {
-    console.log(values); // Log the form data for debugging
+    console.log(values) // Log the form data for debugging
 
     try {
-      const response = await authService.submitCollegeInfo(values);
-      console.log("College Registration Successful:", response);
+      const response = await authService.submitCollegeInfo(values)
+      console.log('College Registration Successful:', response)
 
-      Alert.alert("Success", "College Registered Successfully!");
+      Alert.alert('Success', 'College Registered Successfully!')
     } catch (error) {
-      console.error("College Registration Failed:", error);
-      Alert.alert("Error", "Failed to register the college. Please try again.");
+      console.error('College Registration Failed:', error)
+      Alert.alert('Error', 'Failed to register the college. Please try again.')
     }
-  };
+  }
 
   return (
     <GestureHandlerRootView>
@@ -70,10 +70,10 @@ const CollegeInfo = () => {
 
             <Formik<CollegeInfoFormValues>
               initialValues={{
-                name: "",
-                address: "",
-                latitude: location ? location.coords.latitude.toString() : "",
-                longitude: location ? location.coords.longitude.toString() : "",
+                name: '',
+                address: '',
+                latitude: location ? location.coords.latitude.toString() : '',
+                longitude: location ? location.coords.longitude.toString() : '',
               }}
               validationSchema={collegeInfoSchema}
               onSubmit={onRegisterPress}
@@ -93,8 +93,8 @@ const CollegeInfo = () => {
                     placeholder="Enter College Name"
                     icon={icons.person}
                     value={values.name}
-                    onChangeText={handleChange("name")}
-                    onBlur={handleBlur("name")}
+                    onChangeText={handleChange('name')}
+                    onBlur={handleBlur('name')}
                     error={
                       touched.name && errors.name ? errors.name : undefined
                     }
@@ -104,8 +104,8 @@ const CollegeInfo = () => {
                     placeholder="Enter Address"
                     icon={icons.home}
                     value={values.address}
-                    onChangeText={handleChange("address")}
-                    onBlur={handleBlur("address")}
+                    onChangeText={handleChange('address')}
+                    onBlur={handleBlur('address')}
                     error={
                       touched.address && errors.address
                         ? errors.address
@@ -118,8 +118,8 @@ const CollegeInfo = () => {
                     icon={icons.map}
                     value={values.latitude}
                     keyboardType="numeric"
-                    onChangeText={handleChange("latitude")}
-                    onBlur={handleBlur("latitude")}
+                    onChangeText={handleChange('latitude')}
+                    onBlur={handleBlur('latitude')}
                     error={
                       touched.latitude && errors.latitude
                         ? errors.latitude
@@ -133,8 +133,8 @@ const CollegeInfo = () => {
                     icon={icons.map}
                     value={values.longitude}
                     keyboardType="numeric"
-                    onChangeText={handleChange("longitude")}
-                    onBlur={handleBlur("longitude")}
+                    onChangeText={handleChange('longitude')}
+                    onBlur={handleBlur('longitude')}
                     error={
                       touched.longitude && errors.longitude
                         ? errors.longitude
@@ -158,7 +158,7 @@ const CollegeInfo = () => {
         </View>
       </ScrollView>
     </GestureHandlerRootView>
-  );
-};
+  )
+}
 
-export default CollegeInfo;
+export default CollegeInfo

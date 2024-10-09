@@ -1,5 +1,5 @@
-import { Stack } from "expo-router";
-import "react-native-reanimated";
+import { Stack } from 'expo-router'
+import 'react-native-reanimated'
 
 export default function Layout() {
   return (
@@ -9,5 +9,5 @@ export default function Layout() {
       <Stack.Screen name="sign-in" options={{ headerShown: false }} />
       <Stack.Screen name="collegeInfo" options={{ headerShown: false }} />
     </Stack>
-  );
+  )
 }

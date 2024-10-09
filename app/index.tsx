@@ -1,5 +1,5 @@
-import { Redirect } from "expo-router";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { Redirect } from 'expo-router'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
 
 const Home = () => {
   return (
@@ -7,7 +7,7 @@ const Home = () => {
       {/* <Redirect href="/(root)/(tabs)/home" /> */}
       <Redirect href="/(auth)/welcome" />
     </GestureHandlerRootView>
-  );
-};
+  )
+}
 
-export default Home;
+export default Home

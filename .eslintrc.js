@@ -1,12 +1,26 @@
 module.exports = {
-  extends: ["expo", "prettier"],
-  plugins: ["prettier"],
+  extends: [
+    'expo', // Extends the default Expo rules
+    'prettier', // Integrates Prettier rules to format your code
+  ],
+  plugins: ['prettier'], // Enables the Prettier plugin
   rules: {
-    "prettier/prettier": [
-      "error",
+    // Enforces Prettier's code formatting rules
+    'prettier/prettier': [
+      'error',
       {
-        endOfLine: "lf",
+        endOfLine: 'auto', // Handles different environments with varying end-of-line styles
+        singleQuote: true, // Enforces single quotes for consistency
+        trailingComma: 'es5', // Adds trailing commas where valid in ES5 (objects, arrays, etc.)
+        semi: false, // Disables semicolons to match modern JS styles
       },
     ],
+    // Example rule overrides for flexibility (adjust as needed):
+    'no-console': 'warn', // Warns instead of throwing an error for console statements
+    'no-unused-vars': ['error', { argsIgnorePattern: '^_' }], // Ignores unused variables starting with an underscore
   },
-};
+  env: {
+    browser: true, // Specifies the environment as browser (for React Native web support)
+    node: true, // Adds support for Node.js environment variables
+  },
+}

@@ -1,62 +1,62 @@
-import CustomButton from "@/components/CustomButton";
-import InputField from "@/components/InputField";
-import ToggleButton from "@/components/ToggleButton";
-import { icons, images } from "@/constants";
-import { Link } from "expo-router";
-import { useState } from "react";
-import { View, Text, Image } from "react-native";
-import { ScrollView } from "react-native";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-import authService from "@/api/authService";
+import CustomButton from '@/components/CustomButton'
+import InputField from '@/components/InputField'
+import ToggleButton from '@/components/ToggleButton'
+import { icons, images } from '@/constants'
+import { Link } from 'expo-router'
+import { useState } from 'react'
+import { View, Text, Image } from 'react-native'
+import { ScrollView } from 'react-native'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import authService from '@/api/authService'
 
-import * as Yup from "yup";
-import { Formik, FormikValues } from "formik";
+import * as Yup from 'yup'
+import { Formik, FormikValues } from 'formik'
 
 // Validation schema using Yup
 export const signUpSchema = Yup.object().shape({
   firstName: Yup.string()
-    .min(2, "First name must be at least 2 characters")
-    .max(50, "First name cannot be longer than 50 characters")
-    .required("First name is required"),
+    .min(2, 'First name must be at least 2 characters')
+    .max(50, 'First name cannot be longer than 50 characters')
+    .required('First name is required'),
   lastName: Yup.string()
-    .min(2, "Last name must be at least 2 characters")
-    .max(50, "Last name cannot be longer than 50 characters")
-    .required("Last name is required"),
+    .min(2, 'Last name must be at least 2 characters')
+    .max(50, 'Last name cannot be longer than 50 characters')
+    .required('Last name is required'),
   email: Yup.string()
-    .email("Invalid email address")
-    .required("Email is required"),
+    .email('Invalid email address')
+    .required('Email is required'),
   password: Yup.string()
-    .min(8, "Password must be at least 8 characters")
-    .required("Password is required"),
+    .min(8, 'Password must be at least 8 characters')
+    .required('Password is required'),
   profilePic:
-    Yup.string().url("Invalid URL for profile picture").optional() || null,
+    Yup.string().url('Invalid URL for profile picture').optional() || null,
   phoneNo: Yup.string()
-    .matches(/^[0-9]{10}$/, "Phone number must be 10 digits")
-    .required("Phone number is required"),
-});
+    .matches(/^[0-9]{10}$/, 'Phone number must be 10 digits')
+    .required('Phone number is required'),
+})
 
 const Sign_Up = () => {
-  const [role, setRole] = useState<"student" | "admin">("student");
+  const [role, setRole] = useState<'student' | 'admin'>('student')
 
   // Function to toggle role between student and admin
   const toggleRole = () => {
-    setRole((prevRole) => (prevRole === "student" ? "admin" : "student"));
-  };
+    setRole((prevRole) => (prevRole === 'student' ? 'admin' : 'student'))
+  }
 
   // Handle form submission
   const onSignUpPress = async (values: FormikValues) => {
-    console.log({ ...values, role });
+    console.log({ ...values, role })
 
     try {
-      const formData = { ...values, role };
-      const response = await authService.signUp(formData);
-      console.log("Sign Up Successful:", response);
+      const formData = { ...values, role }
+      const response = await authService.signUp(formData)
+      console.log('Sign Up Successful:', response)
       // Handle success, e.g., navigate to another page or show a success message
     } catch (error) {
-      console.error("Sign Up Failed:", error);
+      console.error('Sign Up Failed:', error)
       // Handle error, e.g., show an error message to the user
     }
-  };
+  }
 
   return (
     <GestureHandlerRootView>
@@ -76,12 +76,12 @@ const Sign_Up = () => {
 
             <Formik
               initialValues={{
-                firstName: "",
-                lastName: "",
-                email: "",
-                password: "",
-                profilePic: "",
-                phoneNo: "",
+                firstName: '',
+                lastName: '',
+                email: '',
+                password: '',
+                profilePic: '',
+                phoneNo: '',
               }}
               validationSchema={signUpSchema}
               onSubmit={onSignUpPress}
@@ -101,8 +101,8 @@ const Sign_Up = () => {
                     placeholder="First Name"
                     icon={icons.person}
                     value={values.firstName}
-                    onChangeText={handleChange("firstName")}
-                    onBlur={handleBlur("firstName")}
+                    onChangeText={handleChange('firstName')}
+                    onBlur={handleBlur('firstName')}
                     error={
                       touched.firstName && errors.firstName
                         ? errors.firstName
@@ -116,8 +116,8 @@ const Sign_Up = () => {
                     placeholder="Last Name"
                     icon={icons.person}
                     value={values.lastName}
-                    onChangeText={handleChange("lastName")}
-                    onBlur={handleBlur("lastName")}
+                    onChangeText={handleChange('lastName')}
+                    onBlur={handleBlur('lastName')}
                     error={
                       touched.lastName && errors.lastName
                         ? errors.lastName
@@ -131,8 +131,8 @@ const Sign_Up = () => {
                     placeholder="Enter Email"
                     icon={icons.email}
                     value={values.email}
-                    onChangeText={handleChange("email")}
-                    onBlur={handleBlur("email")}
+                    onChangeText={handleChange('email')}
+                    onBlur={handleBlur('email')}
                     error={
                       touched.email && errors.email
                         ? errors.lastName
@@ -146,8 +146,8 @@ const Sign_Up = () => {
                     placeholder="Profile Pic"
                     icon={icons.person}
                     value={values.profilePic}
-                    onChangeText={handleChange("profilePic")}
-                    onBlur={handleBlur("profilePic")}
+                    onChangeText={handleChange('profilePic')}
+                    onBlur={handleBlur('profilePic')}
                     error={
                       touched.profilePic && errors.profilePic
                         ? errors.profilePic
@@ -162,8 +162,8 @@ const Sign_Up = () => {
                     icon={icons.email}
                     value={values.phoneNo}
                     keyboardType="numeric"
-                    onChangeText={handleChange("phoneNo")}
-                    onBlur={handleBlur("phoneNo")}
+                    onChangeText={handleChange('phoneNo')}
+                    onBlur={handleBlur('phoneNo')}
                     error={
                       touched.phoneNo && errors.phoneNo
                         ? errors.phoneNo
@@ -178,8 +178,8 @@ const Sign_Up = () => {
                     icon={icons.lock}
                     value={values.password}
                     secureTextEntry={true}
-                    onChangeText={handleChange("password")}
-                    onBlur={handleBlur("password")}
+                    onChangeText={handleChange('password')}
+                    onBlur={handleBlur('password')}
                     error={
                       touched.password && errors.password
                         ? errors.phoneNo
@@ -212,7 +212,7 @@ const Sign_Up = () => {
         </View>
       </ScrollView>
     </GestureHandlerRootView>
-  );
-};
+  )
+}
 
-export default Sign_Up;
+export default Sign_Up

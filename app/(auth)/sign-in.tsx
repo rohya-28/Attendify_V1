@@ -1,47 +1,47 @@
-import CustomButton from "@/components/CustomButton";
-import InputField from "@/components/InputField";
-import { icons, images } from "@/constants";
-import { Link } from "expo-router";
-import { View, Text, Image } from "react-native";
-import { ScrollView } from "react-native";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { Formik, FormikValues } from "formik";
-import * as Yup from "yup";
-import authService from "@/api/authService";
+import CustomButton from '@/components/CustomButton'
+import InputField from '@/components/InputField'
+import { icons, images } from '@/constants'
+import { Link } from 'expo-router'
+import { View, Text, Image } from 'react-native'
+import { ScrollView } from 'react-native'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import { Formik } from 'formik'
+import * as Yup from 'yup'
+import authService from '@/api/authService'
 
 // Define the type for form values
 interface SignInFormValues {
-  email: string;
-  password: string;
+  email: string
+  password: string
 }
 
 // Validation schema for Sign In
 const signInSchema = Yup.object().shape({
   email: Yup.string()
-    .email("Invalid email address")
-    .required("Email is required"),
+    .email('Invalid email address')
+    .required('Email is required'),
   password: Yup.string()
-    .min(8, "Password must be at least 8 characters")
-    .required("Password is required"),
-});
+    .min(8, 'Password must be at least 8 characters')
+    .required('Password is required'),
+})
 
 const Sign_In = () => {
   const onSignInPress = async (values: SignInFormValues) => {
-    console.log("Form data sent:", values);
-    const response = await authService.signIn(values);
-    console.log("Sign In Successful:", response);
+    console.log('Form data sent:', values)
+    const response = await authService.signIn(values)
+    console.log('Sign In Successful:', response)
     try {
       // const response = await authService.signIn(values);
       // console.log("Sign In Successful:", response);
       // Handle success, e.g., navigate to another page or show a success message
     } catch (error: any) {
       if (error.response) {
-        console.error("Error signing in:", error.response.data);
+        console.error('Error signing in:', error.response.data)
       } else {
-        console.error("Sign In Failed:", error.message);
+        console.error('Sign In Failed:', error.message)
       }
     }
-  };
+  }
 
   return (
     <GestureHandlerRootView>
@@ -59,7 +59,7 @@ const Sign_In = () => {
             </View>
 
             <Formik<SignInFormValues>
-              initialValues={{ email: "", password: "" }}
+              initialValues={{ email: '', password: '' }}
               validationSchema={signInSchema}
               onSubmit={onSignInPress}
             >
@@ -78,8 +78,8 @@ const Sign_In = () => {
                     placeholder="Enter Email"
                     icon={icons.email}
                     value={values.email}
-                    onChangeText={handleChange("email")}
-                    onBlur={handleBlur("email")}
+                    onChangeText={handleChange('email')}
+                    onBlur={handleBlur('email')}
                     error={
                       touched.email && errors.email ? errors.email : undefined
                     }
@@ -91,8 +91,8 @@ const Sign_In = () => {
                     icon={icons.lock}
                     value={values.password}
                     secureTextEntry={true}
-                    onChangeText={handleChange("password")}
-                    onBlur={handleBlur("password")}
+                    onChangeText={handleChange('password')}
+                    onBlur={handleBlur('password')}
                     error={
                       touched.password && errors.password
                         ? errors.password
@@ -121,7 +121,7 @@ const Sign_In = () => {
         </View>
       </ScrollView>
     </GestureHandlerRootView>
-  );
-};
+  )
+}
 
-export default Sign_In;
+export default Sign_In

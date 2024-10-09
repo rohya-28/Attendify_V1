@@ -1,23 +1,23 @@
-import { router } from "expo-router";
-import { useRef, useState } from "react";
-import { Image, Text, TouchableOpacity, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import Swiper from "react-native-swiper";
+import { router } from 'expo-router'
+import { useRef, useState } from 'react'
+import { Image, Text, TouchableOpacity, View } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import Swiper from 'react-native-swiper'
 
-import CustomButton from "@/components/CustomButton";
-import { onboarding } from "@/constants";
+import CustomButton from '@/components/CustomButton'
+import { onboarding } from '@/constants'
 
 const Home = () => {
-  const swiperRef = useRef<Swiper>(null);
-  const [activeIndex, setActiveIndex] = useState(0);
+  const swiperRef = useRef<Swiper>(null)
+  const [activeIndex, setActiveIndex] = useState(0)
 
-  const isLastSlide = activeIndex === onboarding.length - 1;
+  const isLastSlide = activeIndex === onboarding.length - 1
 
   return (
     <SafeAreaView className="flex h-full items-center justify-between bg-white">
       <TouchableOpacity
         onPress={() => {
-          router.replace("/(auth)/sign-up");
+          router.replace('/(auth)/sign-up')
         }}
         className="w-full flex justify-end items-end p-5"
       >
@@ -55,16 +55,16 @@ const Home = () => {
       </Swiper>
 
       <CustomButton
-        title={isLastSlide ? "Get Started" : "Next"}
+        title={isLastSlide ? 'Get Started' : 'Next'}
         onPress={() =>
           isLastSlide
-            ? router.replace("/(auth)/sign-up")
+            ? router.replace('/(auth)/sign-up')
             : swiperRef.current?.scrollBy(1)
         }
         className="w-11/12 mt-10 mb-5"
       />
     </SafeAreaView>
-  );
-};
+  )
+}
 
-export default Home;
+export default Home
