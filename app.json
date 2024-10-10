@@ -5,9 +5,9 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
+    "scheme": "attendify",
     "userInterfaceStyle": "automatic",
-    "softwareKeyboardLayoutMode":"pan",
+    "softwareKeyboardLayoutMode": "pan",
     "splash": {
       "image": "./assets/images/Spalsh.png",
       "resizeMode": "contain",
@@ -17,6 +17,7 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "com.attendify.identifier",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/icon.png",
         "backgroundColor": "#ffffff"
@@ -32,6 +33,11 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "6078967e-1b74-4882-b6ba-ab4fad5ce78b"
+      }
     }
   }
 }

@@ -25,7 +25,6 @@ const authService = {
   signIn: async (formData: { email: string; password: string }) => {
     try {
       const response = await api.post(`/users/signIn`, formData)
-      console.log(formData)
       return response.data
     } catch (error: any) {
       console.error('Error signing in:', error.response?.data || error.message)
