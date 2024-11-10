@@ -8,7 +8,7 @@ const api = axios.create({
   },
 })
 
-const authService = {
+const collegeService = {
   signUp: async (formData: UserProfile) => {
     try {
       const response = await api.post(`/users/signup`, formData)
@@ -20,15 +20,23 @@ const authService = {
     }
   },
 
-  signIn: async (formData: { email: string; password: string }) => {
+  submitCollegeInfo: async (formData: {
+    name: string
+    address: string
+    latitude: string
+    longitude: string
+  }) => {
     try {
-      const response = await api.post(`/users/signIn`, formData)
+      const response = await api.post(`/college-info`, formData)
       return response.data
     } catch (error: any) {
-      console.error('Error signing in:', error.response?.data || error.message)
+      console.error(
+        'Error submitting college info:',
+        error.response?.data || error.message
+      )
       throw error
     }
   },
 }
 
-export default authService
+export default collegeService

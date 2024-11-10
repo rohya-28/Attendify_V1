@@ -33,6 +33,8 @@ export const signUpSchema = Yup.object().shape({
   phoneNo: Yup.string()
     .matches(/^[0-9]{10}$/, 'Phone number must be 10 digits')
     .required('Phone number is required'),
+  organizationName: Yup.string().required('Organization name is required'),
+  organizationId: Yup.string().required('Organization ID is required'),
 })
 
 const Sign_Up = () => {
@@ -45,10 +47,9 @@ const Sign_Up = () => {
 
   // Handle form submission
   const onSignUpPress = async (values: FormikValues) => {
-    console.log({ ...values, role })
-
     try {
       const formData = { ...values, role }
+      // console.log('Sign Up Successful:', formData)
       const response = await authService.signUp(formData)
       console.log('Sign Up Successful:', response)
       // Handle success, e.g., navigate to another page or show a success message
@@ -82,6 +83,8 @@ const Sign_Up = () => {
                 password: '',
                 profilePic: '',
                 phoneNo: '',
+                organizationName: '',
+                organizationId: '',
               }}
               validationSchema={signUpSchema}
               onSubmit={onSignUpPress}
@@ -135,7 +138,7 @@ const Sign_Up = () => {
                     onBlur={handleBlur('email')}
                     error={
                       touched.email && errors.email
-                        ? errors.lastName
+                        ? errors.email
                         : undefined
                     }
                   />
@@ -171,6 +174,36 @@ const Sign_Up = () => {
                     }
                   />
 
+                  {/* Organization Name Input Field */}
+                  <InputField
+                    label="Organization Name"
+                    placeholder="Enter Organization Name"
+                    icon={icons.building}
+                    value={values.organizationName}
+                    onChangeText={handleChange('organizationName')}
+                    onBlur={handleBlur('organizationName')}
+                    error={
+                      touched.organizationName && errors.organizationName
+                        ? errors.organizationName
+                        : undefined
+                    }
+                  />
+
+                  {/* Organization ID Input Field */}
+                  <InputField
+                    label="Organization ID"
+                    placeholder="Enter Organization ID"
+                    icon={icons.idCard}
+                    value={values.organizationId}
+                    onChangeText={handleChange('organizationId')}
+                    onBlur={handleBlur('organizationId')}
+                    error={
+                      touched.organizationId && errors.organizationId
+                        ? errors.organizationId
+                        : undefined
+                    }
+                  />
+
                   {/* Password Input Field */}
                   <InputField
                     label="Password"
@@ -182,7 +215,7 @@ const Sign_Up = () => {
                     onBlur={handleBlur('password')}
                     error={
                       touched.password && errors.password
-                        ? errors.phoneNo
+                        ? errors.password
                         : undefined
                     }
                   />

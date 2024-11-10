@@ -1,14 +1,14 @@
+import { Link, useRouter } from 'expo-router' // Ensure to import useRouter correctly
 import CustomButton from '@/components/CustomButton'
 import InputField from '@/components/InputField'
 import { icons, images } from '@/constants'
-import { Link } from 'expo-router'
-import { View, Text, Image } from 'react-native'
-import { ScrollView } from 'react-native'
-import { GestureHandlerRootView, State } from 'react-native-gesture-handler'
+import { View, Text, Image, ScrollView } from 'react-native'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
 import authService from '@/api/authService'
 import useAuthStore from '@/store/useAuthStore'
+import { jwtDecode } from 'jwt-decode'
 
 // Define the type for form values
 interface SignInFormValues {
@@ -27,13 +27,30 @@ const signInSchema = Yup.object().shape({
 })
 
 const Sign_In = () => {
-  const setToken = useAuthStore((State) => State.setToken)
+  const router = useRouter() // Initialize the router
+  const setToken = useAuthStore((state) => state.setToken)
+  const setRole = useAuthStore((state) => state.setRole)
+  const setUserId = useAuthStore((state) => state.setUserId)
+  const setOrganizationId = useAuthStore((state) => state.setOrganizationId)
+
   const onSignInPress = async (values: SignInFormValues) => {
     try {
       const response = await authService.signIn(values)
       console.log('Sign In Successful:', response)
       const _accessToken = response.accessToken
-      setToken(_accessToken)
+
+      // Decode the token to get user info
+      const decoded = jwtDecode<DecodedToken>(_accessToken)
+      console.log('Decoded Token:', decoded)
+
+      // Set token and user details in the store
+      setToken(_accessToken) // This will also set role, userId, and organizationId
+      setRole(decoded.role) // Optionally set role
+      setUserId(decoded.userId) // Optionally set user ID
+      setOrganizationId(decoded.organizationId) // Optionally set organization ID
+
+      // Redirect to home page after successful sign-in
+      router.push('/home') // Change '/home' to your actual home route
     } catch (error: any) {
       if (error.response) {
         console.error('Error signing in:', error.response.data)
@@ -70,7 +87,6 @@ const Sign_In = () => {
                 values,
                 errors,
                 touched,
-                isSubmitting, // Added to manage the button disabled state
               }) => (
                 <View className="p-5">
                   <InputField
@@ -104,7 +120,6 @@ const Sign_In = () => {
                     title="Sign In"
                     onPress={handleSubmit}
                     className="mt-4"
-                    // disabled={isSubmitting} // Disable button while form is submitting
                   />
 
                   <Link

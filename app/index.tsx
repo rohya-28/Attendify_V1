@@ -6,9 +6,10 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import Verify from './(auth)/verify' // Your verification page
 
 const Stack = createNativeStackNavigator()
+const universal = Linking.createURL('https://attendify.example.com')
 
 const linking: LinkingOptions = {
-  prefixes: ['http://192.168.1.100:19000', 'attendify://'],
+  prefixes: [universal, 'attendify://'],
   config: {
     screens: {
       Verify: 'verify', // Maps the URL myapp://verify to the Verify screen
@@ -25,8 +26,8 @@ export default function App() {
           {/* You can add more screens here if needed */}
         </Stack.Navigator>
       </NavigationContainer>
-      <Redirect href="/(auth)/verify" />
-      {/* <Redirect href="/(root)/(tabs)/home" /> */}
+      <Redirect href="/(root)/(tabs)/invite" />
+      {/* <Redirect href="/(auth)/sign-in" /> */}
       {/* Optionally, redirect to other routes if necessary */}
     </GestureHandlerRootView>
   )

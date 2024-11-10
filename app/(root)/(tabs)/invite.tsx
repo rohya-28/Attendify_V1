@@ -1,35 +1,35 @@
-import { ScrollView, Text, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import useCurrentDateTime from "@/hooks/useUserDateTime";
-import CustomButton from "@/components/CustomButton";
-import InputField from "@/components/InputField";
-import { icons } from "@/constants";
-import { useState } from "react";
-import ToggleButton from "@/components/ToggleButton";
-import * as Yup from "yup";
-import { Formik } from "formik";
+import { ScrollView, Text, View } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import useCurrentDateTime from '@/hooks/useUserDateTime'
+import CustomButton from '@/components/CustomButton'
+import InputField from '@/components/InputField'
+import { icons } from '@/constants'
+import { useState } from 'react'
+import ToggleButton from '@/components/ToggleButton'
+import * as Yup from 'yup'
+import { Formik } from 'formik'
 
 // Validation schema for the invite form
 export const inviteSchema = Yup.object().shape({
   email: Yup.string()
-    .email("Invalid email address")
-    .required("Email is required"),
-});
+    .email('Invalid email address')
+    .required('Email is required'),
+})
 
 const Invite = () => {
-  const currentDateTime = useCurrentDateTime(); // Get current date and time
-  const [role, setRole] = useState<"student" | "admin">("student"); // Role state for toggling between student and admin
+  const currentDateTime = useCurrentDateTime() // Get current date and time
+  const [role, setRole] = useState<'student' | 'admin'>('student') // Role state for toggling between student and admin
 
   // Function to toggle between roles
   const toggleRole = () => {
-    setRole((prevRole) => (prevRole === "student" ? "admin" : "student"));
-  };
+    setRole((prevRole) => (prevRole === 'student' ? 'admin' : 'student'))
+  }
 
   // Function to handle form submission
   const submitInviteForm = (values: { email: string }) => {
-    console.log(`Inviting ${values.email} as a ${role}`);
+    console.log(`Inviting ${values.email} as a ${role}`)
     // Add further logic to handle the invitation process here
-  };
+  }
 
   return (
     <SafeAreaView className="flex-1 bg-white p-5">
@@ -40,13 +40,13 @@ const Invite = () => {
         <View className="mt-4">
           <Text className="text-lg">Current Date & Time:</Text>
           <Text>
-            {`Date: ${currentDateTime.toLocaleDateString()} | Time: ${currentDateTime.toLocaleTimeString(
+            {`Day: ${currentDateTime.day} | Date: ${currentDateTime.date.toLocaleDateString()} | Time: ${currentDateTime.date.toLocaleTimeString(
               [],
               {
-                hour: "2-digit",
-                minute: "2-digit",
-                second: "2-digit",
-              },
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+              }
             )}`}
           </Text>
         </View>
@@ -64,7 +64,7 @@ const Invite = () => {
 
               {/* Formik Form for Email Input */}
               <Formik
-                initialValues={{ email: "" }}
+                initialValues={{ email: '' }}
                 validationSchema={inviteSchema}
                 onSubmit={submitInviteForm}
               >
@@ -89,9 +89,9 @@ const Invite = () => {
                         placeholder="Enter Email"
                         icon={icons.email}
                         value={values.email}
-                        onChangeText={handleChange("email")}
-                        onBlur={handleBlur("email")}
-                         containerStyle="bg-white"
+                        onChangeText={handleChange('email')}
+                        onBlur={handleBlur('email')}
+                        containerStyle="bg-white"
                         error={
                           touched.email && errors.email
                             ? errors.email
@@ -116,7 +116,7 @@ const Invite = () => {
         </View>
       </ScrollView>
     </SafeAreaView>
-  );
-};
+  )
+}
 
-export default Invite;
+export default Invite
