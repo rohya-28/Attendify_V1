@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { UserProfile } from '@/types/type'
+import { UserProfile, LectureData } from '@/types/type' // Assuming LectureData is the correct type for creating a lecture
 
 const api = axios.create({
   baseURL: 'http://192.168.18.198:5513/api/v1',
@@ -9,10 +9,11 @@ const api = axios.create({
 })
 
 const collegeService = {
+  // Sign up new user
   signUp: async (formData: UserProfile) => {
     try {
       const response = await api.post(`/users/signup`, formData)
-      console.log('testing ', formData)
+      console.log('User signed up: ', formData)
       return response.data
     } catch (error: any) {
       console.error('Error signing up:', error.response?.data || error.message)
@@ -20,6 +21,7 @@ const collegeService = {
     }
   },
 
+  // Submit college information
   submitCollegeInfo: async (formData: {
     name: string
     address: string
@@ -28,10 +30,26 @@ const collegeService = {
   }) => {
     try {
       const response = await api.post(`/college-info`, formData)
+      console.log('College information submitted:', formData)
       return response.data
     } catch (error: any) {
       console.error(
         'Error submitting college info:',
+        error.response?.data || error.message
+      )
+      throw error
+    }
+  },
+
+  // Create a new lecture
+  createLecture: async (formData: LectureData) => {
+    try {
+      const response = await api.post(`/lecture/create`, formData)
+      console.log('Lecture created:', formData)
+      return response.data
+    } catch (error: any) {
+      console.error(
+        'Error creating lecture:',
         error.response?.data || error.message
       )
       throw error

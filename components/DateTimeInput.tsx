@@ -1,40 +1,66 @@
 import React, { useState } from 'react'
-import { View, Text, Button } from 'react-native'
+import { View, Text } from 'react-native'
 import DateTimePicker from '@react-native-community/datetimepicker'
+import CustomButton from './CustomButton'
 
-const DateTimeInput = () => {
-  const [date, setDate] = useState(new Date())
-  const [showPicker, setShowPicker] = useState(false)
-  const [formattedDate, setFormattedDate] = useState('')
+const DateTimeInput = ({ setStartTime, setEndTime }) => {
+  const [startDate, setStartDate] = useState(new Date())
+  const [endDate, setEndDate] = useState(new Date())
+  const [showStartPicker, setShowStartPicker] = useState(false)
+  const [showEndPicker, setShowEndPicker] = useState(false)
 
-  const onChange = (event, selectedDate) => {
-    const currentDate = selectedDate || date
-    setShowPicker(false)
-    setDate(currentDate)
+  const onChangeStart = (event, selectedDate) => {
+    const currentDate = selectedDate || startDate
+    setShowStartPicker(false)
+    setStartDate(currentDate)
 
-    // Format the date to ISO string
-    const isoDateString = currentDate.toISOString()
-    setFormattedDate(isoDateString)
+    // Adjust the selected date to local time before passing it to the parent component
+    const localStartTime = new Date(
+      currentDate.getTime() - currentDate.getTimezoneOffset() * 60000
+    )
+    setStartTime(localStartTime) // Update the start time in local time
+  }
+
+  const onChangeEnd = (event, selectedDate) => {
+    const currentDate = selectedDate || endDate
+    setShowEndPicker(false)
+    setEndDate(currentDate)
+
+    // Adjust the selected date to local time before passing it to the parent component
+    const localEndTime = new Date(
+      currentDate.getTime() - currentDate.getTimezoneOffset() * 60000
+    )
+    setEndTime(localEndTime) // Update the end time in local time
   }
 
   return (
     <View>
-      <Button
-        title="Select Date and Time"
-        onPress={() => setShowPicker(true)}
+      <CustomButton
+        className="rounded-md"
+        title="Select Start Time"
+        onPress={() => setShowStartPicker(true)}
       />
-      {showPicker && (
+      {showStartPicker && (
         <DateTimePicker
-          value={date}
-          mode="datetime" // Set mode to 'datetime' for both date and time
-          is24Hour={true} // Use 24-hour format
-          onChange={onChange}
+          value={startDate}
+          mode="time"
+          display="default"
+          onChange={onChangeStart}
         />
       )}
-      {formattedDate ? (
-        <Text>Selected Date & Time: {formattedDate}</Text>
-      ) : (
-        <Text>No date selected</Text>
+
+      <CustomButton
+        className="rounded-md mt-4"
+        title="Select End Time"
+        onPress={() => setShowEndPicker(true)}
+      />
+      {showEndPicker && (
+        <DateTimePicker
+          value={endDate}
+          mode="time"
+          display="default"
+          onChange={onChangeEnd}
+        />
       )}
     </View>
   )
