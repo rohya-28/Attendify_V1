@@ -1,8 +1,9 @@
 import axios from 'axios'
 import { UserProfile, LectureData } from '@/types/type' // Assuming LectureData is the correct type for creating a lecture
+import useAuthStore from '@/store/useAuthStore'
 
 const api = axios.create({
-  baseURL: 'http://192.168.18.198:5513/api/v1',
+  baseURL: 'http://192.168.30.198:5513/api/v1',
   headers: {
     'Content-Type': 'application/json',
   },
@@ -43,8 +44,15 @@ const collegeService = {
 
   // Create a new lecture
   createLecture: async (formData: LectureData) => {
+    const token = useAuthStore.getState().token
+    console.log(formData)
+
     try {
-      const response = await api.post(`/lecture/create`, formData)
+      const response = await api.post('/lecture/create', formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       console.log('Lecture created:', formData)
       return response.data
     } catch (error: any) {

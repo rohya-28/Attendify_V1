@@ -46,7 +46,9 @@ const Sign_In = () => {
       // Set token and user details in the store
       setToken(_accessToken) // This will also set role, userId, and organizationId
       setRole(decoded.role) // Optionally set role
-      setUserId(decoded.userId) // Optionally set user ID
+      setUserId(decoded.sub) // Optionally set user ID
+      console.log(useAuthStore.getState().userId)
+
       setOrganizationId(decoded.organizationId) // Optionally set organization ID
 
       // Redirect to home page after successful sign-in

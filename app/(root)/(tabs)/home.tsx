@@ -18,12 +18,10 @@ const Home = () => {
   const [startTime, setStartTime] = useState<Date | null>(null) // State for start time
   const [endTime, setEndTime] = useState<Date | null>(null) // State for end time
   const [attendanceCode, setAttendanceCode] = useState('') // State for student attendance code
-  const [subjectName, setSubjectName] = useState('') // State for admin subject name
+  const [subject, setSubject] = useState('') // State for admin subject name
 
   // Submit handler
   const handleSubmit = async () => {
-    const role = 'admin'
-
     // Ensure startTime is a valid date and calculate dayOfWeek
     let dayOfWeek = ''
     if (startTime) {
@@ -32,21 +30,25 @@ const Home = () => {
       dayOfWeek = date.toLocaleString('en-US', { weekday: 'long' }) // Get the weekday name (e.g., Monday, Tuesday, etc.)
     }
 
+    const teacherId = useAuthStore.getState().userId
+
     const data = {
-      subjectName,
+      teacherId,
+      subject,
       startTime: startTime ? startTime.toISOString() : '',
       endTime: endTime ? endTime.toISOString() : '',
       dayOfWeek, // Add the dayOfWeek field to the data object
     }
 
-    if (role === 'student') {
+    if (role === 'STUDENT') {
       // Log data for student role (attendance code)
       console.log('Student Data Submitted:', {
         attendanceCode,
         startTime: startTime ? startTime.toISOString() : '',
         endTime: endTime ? endTime.toISOString() : '',
       })
-    } else if (role === 'admin') {
+    } else if (role === 'ADMIN') {
+      console.log(data)
       // Log data for admin role (lecture creation)
       console.log('Admin Data Submitted:', data)
 
@@ -136,8 +138,8 @@ const Home = () => {
                     label="Subject Name"
                     placeholder="Enter Subject Name"
                     icon={icons.person}
-                    value={subjectName}
-                    onChangeText={setSubjectName}
+                    value={subject}
+                    onChangeText={setSubject}
                     className="w-full h-full"
                     containerStyle="bg-white"
                   />
