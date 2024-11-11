@@ -10,7 +10,6 @@ import {
   ScrollView,
 } from 'react-native-gesture-handler'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { Picker } from '@react-native-picker/picker'
 import collegeService from '@/api/collegeService'
 import { LectureData } from '@/types/type'
 
@@ -20,11 +19,10 @@ const Home = () => {
   const [endTime, setEndTime] = useState<Date | null>(null) // State for end time
   const [attendanceCode, setAttendanceCode] = useState('') // State for student attendance code
   const [subjectName, setSubjectName] = useState('') // State for admin subject name
-  const [dayOfWeek, setDayOfWeek] = useState('') // State for selected day of the week
 
   // Submit handler
   const handleSubmit = async () => {
-    const role = 'admin' // Get the actual role from your state/store (e.g., useAuthStore)
+    const role = 'admin'
 
     // Ensure startTime is a valid date and calculate dayOfWeek
     let dayOfWeek = ''
@@ -95,6 +93,25 @@ const Home = () => {
               </View>
             </View>
 
+            <View className="mt-4  h-24  w-full    flex-row justify-evenly items-center overflow-hidden shadow-md shadow-neutral-400/700 ">
+              <View className="h-full w-[47%] flex justify-start items-center rounded-2xl bg-[#F5F9FF] border border-[#61A2FE] drop-shadow-2xl">
+                <Text className="text-lg text-[#61A2FE] text-center font-JakartaSemiBold ">
+                  Total Lecture
+                </Text>
+                <Text className="mt-2 text-2xl text-[#61A2FE] text-center font-JakartaSemiBold ">
+                  20
+                </Text>
+              </View>
+              <View className="h-full w-[47%] flex justify-start items-center rounded-2xl bg-[#F5FCFB] border border-[#30BEB6] drop-shadow-2xl">
+                <Text className="text-lg text-[#30BEB6] text-center font-JakartaSemiBold ">
+                  Attended Lecture
+                </Text>
+                <Text className="mt-2 text-2xl text-[#30BEB6] text-center font-JakartaSemiBold ">
+                  30
+                </Text>
+              </View>
+            </View>
+
             {/* Role-based Form Section */}
             {role === 'student' ? (
               <View className="mt-4 h-48 w-full rounded-md flex-col justify-between items-center border">
@@ -113,7 +130,7 @@ const Home = () => {
                 />
               </View>
             ) : (
-              <View className="mt-4 h-[650px] w-full flex-col items-center border border-yellow-500">
+              <View className="mt-4 h-[550px] w-full flex-col items-center border border-yellow-500">
                 <View className="h-[80%] w-[100%] rounded-xl flex-col bg-[#F4F4FB] justify-around overflow-hidden">
                   <InputField
                     label="Subject Name"
@@ -128,22 +145,6 @@ const Home = () => {
                     setStartTime={setStartTime}
                     setEndTime={setEndTime}
                   />
-                  <Text className="mt-4 text-lg">Select Day of the Week</Text>
-                  <Picker
-                    selectedValue={dayOfWeek}
-                    onValueChange={(itemValue) => setDayOfWeek(itemValue)}
-                    style={{ height: 50, width: 200 }}
-                  >
-                    <Picker.Item label="Select a day" value="" />
-                    <Picker.Item label="Monday" value="monday" />
-                    <Picker.Item label="Tuesday" value="tuesday" />
-                    <Picker.Item label="Wednesday" value="wednesday" />
-                    <Picker.Item label="Thursday" value="thursday" />
-                    <Picker.Item label="Friday" value="friday" />
-                    <Picker.Item label="Saturday" value="saturday" />
-                    <Picker.Item label="Sunday" value="sunday" />
-                  </Picker>
-
                   <CustomButton
                     title="Submit"
                     onPress={handleSubmit}
