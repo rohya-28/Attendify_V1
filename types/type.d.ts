@@ -35,3 +35,20 @@ export interface LectureData {
   endTime: string
   dayOfWeek: string
 }
+
+export interface UserStore {
+  token: string
+  role: string
+  userId: string
+  organizationId: string
+  setToken: (token: string) => void
+  setRole: (role: string) => void
+  setUserId: (userId: string) => void
+  setOrganizationId: (organizationId: string) => void
+}
+
+export interface SessionValues {
+  teacherId: string
+  lectureId: string
+  isActive: true
+}

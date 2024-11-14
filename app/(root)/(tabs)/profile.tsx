@@ -1,7 +1,16 @@
+// pages/Profile.tsx
+import React from 'react'
 import { View, Text, ScrollView } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import useUserStore from '@/store/useUserStore'
 
 const Profile = () => {
+  const { user } = useUserStore() // Get user data from the store
+
+  if (!user) {
+    return <Text>No user data found</Text>
+  }
+
   return (
     <SafeAreaView className="flex-1 bg-white p-5">
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
@@ -25,32 +34,39 @@ const Profile = () => {
                 <Text className="text-sm font-medium text-gray-500">
                   Full name
                 </Text>
-                <Text className="text-sm text-gray-900">John Doe</Text>
+                <Text className="text-sm text-gray-900">{`${user.firstName} ${user.lastName}`}</Text>
               </View>
               {/* Email */}
               <View className="py-3 flex-row justify-between">
                 <Text className="text-sm font-medium text-gray-500">
                   Email address
                 </Text>
-                <Text className="text-sm text-gray-900">
-                  johndoe@example.com
-                </Text>
+                <Text className="text-sm text-gray-900">{user.email}</Text>
               </View>
               {/* Phone Number */}
               <View className="py-3 flex-row justify-between">
                 <Text className="text-sm font-medium text-gray-500">
                   Phone number
                 </Text>
-                <Text className="text-sm text-gray-900">(123) 456-7890</Text>
+                <Text className="text-sm text-gray-900">
+                  {user.phoneNumber}
+                </Text>
               </View>
-              {/* Address */}
+              {/* Organization ID */}
               <View className="py-3 flex-row justify-between">
                 <Text className="text-sm font-medium text-gray-500">
-                  Address
+                  Organization ID
                 </Text>
                 <Text className="text-sm text-gray-900">
-                  123 Main St, Anytown, USA 12345
+                  {user.organizationId}
                 </Text>
+              </View>
+
+              <View className="py-3 flex-row justify-between">
+                <Text className="text-sm font-medium text-gray-500">
+                  Organization Role
+                </Text>
+                <Text className="text-sm text-gray-900">{user.role}</Text>
               </View>
             </View>
           </View>

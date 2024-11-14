@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import CustomButton from '@/components/CustomButton'
 import DateTimeInput from '@/components/DateTimeInput'
 import InputField from '@/components/InputField'
 import { icons } from '@/constants'
 import useAuthStore from '@/store/useAuthStore'
+import useUserStore from '@/store/useUserStore'
 import { View, Text, Image } from 'react-native'
 import {
   GestureHandlerRootView,
@@ -11,51 +12,67 @@ import {
 } from 'react-native-gesture-handler'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import collegeService from '@/api/collegeService'
-import { LectureData } from '@/types/type'
+import useLectureStore from '@/store/useLectureStore'
 
 const Home = () => {
   const role = useAuthStore((state) => state.role)
-  const [startTime, setStartTime] = useState<Date | null>(null) // State for start time
-  const [endTime, setEndTime] = useState<Date | null>(null) // State for end time
-  const [attendanceCode, setAttendanceCode] = useState('') // State for student attendance code
-  const [subject, setSubject] = useState('') // State for admin subject name
+  const setUser = useUserStore((state) => state.setUser)
+  const setLectures = useLectureStore((state) => state.setLectures)
 
-  // Submit handler
+  const [startTime, setStartTime] = useState<Date | null>(null)
+  const [endTime, setEndTime] = useState<Date | null>(null)
+  const [attendanceCode, setAttendanceCode] = useState('')
+  const [subject, setSubject] = useState('')
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  // Fetch user and lecture data when the component mounts
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await collegeService.getUserData()
+        setUser(response.user) // Store user data in Zustand
+        const responseLecture = await collegeService.getLectureData()
+        console.log('Hi Testing', responseLecture)
+
+        setLectures(responseLecture.lectures)
+      } catch (err) {
+        setError(err.message)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchUserData()
+  }, [setUser])
+
   const handleSubmit = async () => {
-    // Ensure startTime is a valid date and calculate dayOfWeek
     let dayOfWeek = ''
     if (startTime) {
-      const date = new Date(startTime) // Convert startTime to Date object
-      // Adjust the timezone by setting to local time and extracting day
-      dayOfWeek = date.toLocaleString('en-US', { weekday: 'long' }) // Get the weekday name (e.g., Monday, Tuesday, etc.)
+      const date = new Date(startTime)
+      dayOfWeek = date.toLocaleString('en-US', { weekday: 'long' })
     }
 
     const teacherId = useAuthStore.getState().userId
 
-    const data = {
+    const lectureData = {
       teacherId,
       subject,
       startTime: startTime ? startTime.toISOString() : '',
       endTime: endTime ? endTime.toISOString() : '',
-      dayOfWeek, // Add the dayOfWeek field to the data object
+      dayOfWeek,
     }
 
     if (role === 'STUDENT') {
-      // Log data for student role (attendance code)
       console.log('Student Data Submitted:', {
         attendanceCode,
         startTime: startTime ? startTime.toISOString() : '',
         endTime: endTime ? endTime.toISOString() : '',
       })
     } else if (role === 'ADMIN') {
-      console.log(data)
-      // Log data for admin role (lecture creation)
-      console.log('Admin Data Submitted:', data)
-
-      // Send data to the backend API using axios
+      console.log('Admin Data Submitted:', lectureData)
       try {
-        const response = await collegeService.createLecture(data) // Using axios service
-
+        const response = await collegeService.createLecture(lectureData)
         if (response.success) {
           console.log('Lecture Created:', response.data)
         } else {
@@ -70,12 +87,21 @@ const Home = () => {
     }
   }
 
+  const { user } = useUserStore()
+
   return (
     <GestureHandlerRootView>
       <ScrollView>
         <SafeAreaView className="w-full h-full justify-center items-center bg-white">
           <View className="h-full w-[95%]">
-            {/* Heading Section */}
+            {loading ? (
+              <Text>Loading...</Text>
+            ) : error ? (
+              <Text>Error: {error}</Text>
+            ) : (
+              <Text></Text>
+            )}
+
             <View className="mt-2">
               <View className="bg-[#0C0C0C] rounded-full h-12 w-12 justify-center items-center">
                 <Image
@@ -90,32 +116,31 @@ const Home = () => {
                   Hello,
                 </Text>
                 <Text className="text-2xl font-JakartaSemiBold text-blue-600">
-                  Max Steel
+                  {user?.firstName} {user?.lastName}
                 </Text>
               </View>
             </View>
 
-            <View className="mt-4  h-24  w-full    flex-row justify-evenly items-center overflow-hidden shadow-md shadow-neutral-400/700 ">
+            <View className="mt-4 h-24 w-full flex-row justify-evenly items-center overflow-hidden shadow-md shadow-neutral-400/700">
               <View className="h-full w-[47%] flex justify-start items-center rounded-2xl bg-[#F5F9FF] border border-[#61A2FE] drop-shadow-2xl">
-                <Text className="text-lg text-[#61A2FE] text-center font-JakartaSemiBold ">
+                <Text className="text-lg text-[#61A2FE] text-center font-JakartaSemiBold">
                   Total Lecture
                 </Text>
-                <Text className="mt-2 text-2xl text-[#61A2FE] text-center font-JakartaSemiBold ">
+                <Text className="mt-2 text-2xl text-[#61A2FE] text-center font-JakartaSemiBold">
                   20
                 </Text>
               </View>
               <View className="h-full w-[47%] flex justify-start items-center rounded-2xl bg-[#F5FCFB] border border-[#30BEB6] drop-shadow-2xl">
-                <Text className="text-lg text-[#30BEB6] text-center font-JakartaSemiBold ">
+                <Text className="text-lg text-[#30BEB6] text-center font-JakartaSemiBold">
                   Attended Lecture
                 </Text>
-                <Text className="mt-2 text-2xl text-[#30BEB6] text-center font-JakartaSemiBold ">
+                <Text className="mt-2 text-2xl text-[#30BEB6] text-center font-JakartaSemiBold">
                   30
                 </Text>
               </View>
             </View>
 
-            {/* Role-based Form Section */}
-            {role === 'student' ? (
+            {role === 'STUDENT' ? (
               <View className="mt-4 h-48 w-full rounded-md flex-col justify-between items-center border">
                 <InputField
                   label="Enter Attendance Code"

@@ -2,7 +2,7 @@ import axios from 'axios'
 import { UserProfile } from '@/types/type'
 
 const api = axios.create({
-  baseURL: 'http://192.168.30.198:5513/api/v1',
+  baseURL: 'https://trackmyclass-backend.vercel.app/api/v1',
   headers: {
     'Content-Type': 'application/json',
   },
@@ -22,7 +22,7 @@ const authService = {
 
   signIn: async (formData: { email: string; password: string }) => {
     try {
-      const response = await api.post(`/users/signIn`, formData)
+      const response = await api.post(`/user/signIn`, formData)
       return response.data
     } catch (error: any) {
       console.error('Error signing in:', error.response?.data || error.message)
