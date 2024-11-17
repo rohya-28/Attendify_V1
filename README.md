@@ -1,1 +1,1 @@
-npx expo start -c it will clear cache
+npx expo start -c it will clear cache.
