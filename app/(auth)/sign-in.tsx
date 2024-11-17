@@ -1,66 +1,66 @@
-import { Link, useRouter } from 'expo-router' // Ensure to import useRouter correctly
-import CustomButton from '@/components/CustomButton'
-import InputField from '@/components/InputField'
-import { icons, images } from '@/constants'
-import { View, Text, Image, ScrollView } from 'react-native'
-import { GestureHandlerRootView } from 'react-native-gesture-handler'
-import { Formik } from 'formik'
-import * as Yup from 'yup'
-import authService from '@/api/authService'
-import useAuthStore from '@/store/useAuthStore'
-import { jwtDecode } from 'jwt-decode'
+import { Link, useRouter } from "expo-router"; // Ensure to import useRouter correctly
+import CustomButton from "@/components/CustomButton";
+import InputField from "@/components/InputField";
+import { icons, images } from "@/constants";
+import { View, Text, Image, ScrollView } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { Formik } from "formik";
+import * as Yup from "yup";
+import authService from "@/api/authService";
+import useAuthStore from "@/store/useAuthStore";
+import { jwtDecode } from "jwt-decode";
 
 // Define the type for form values
 interface SignInFormValues {
-  email: string
-  password: string
+  email: string;
+  password: string;
 }
 
 // Validation schema for Sign In
 const signInSchema = Yup.object().shape({
   email: Yup.string()
-    .email('Invalid email address')
-    .required('Email is required'),
+    .email("Invalid email address")
+    .required("Email is required"),
   password: Yup.string()
-    .min(8, 'Password must be at least 8 characters')
-    .required('Password is required'),
-})
+    .min(8, "Password must be at least 8 characters")
+    .required("Password is required"),
+});
 
 const Sign_In = () => {
-  const router = useRouter() // Initialize the router
-  const setToken = useAuthStore((state) => state.setToken)
-  const setRole = useAuthStore((state) => state.setRole)
-  const setUserId = useAuthStore((state) => state.setUserId)
-  const setOrganizationId = useAuthStore((state) => state.setOrganizationId)
+  const router = useRouter(); // Initialize the router
+  const setToken = useAuthStore((state) => state.setToken);
+  const setRole = useAuthStore((state) => state.setRole);
+  const setUserId = useAuthStore((state) => state.setUserId);
+  const setOrganizationId = useAuthStore((state) => state.setOrganizationId);
 
   const onSignInPress = async (values: SignInFormValues) => {
     try {
-      const response = await authService.signIn(values)
-      console.log('Sign In Successful:', response)
-      const _accessToken = response.accessToken
+      const response = await authService.signIn(values);
+      console.log("Sign In Successful:", response);
+      const _accessToken = response.accessToken;
 
       // Decode the token to get user info
-      const decoded = jwtDecode<DecodedToken>(_accessToken)
-      console.log('Decoded Token:', decoded)
+      const decoded = jwtDecode<DecodedToken>(_accessToken);
+      console.log("Decoded Token:", decoded);
 
       // Set token and user details in the store
-      setToken(_accessToken) // This will also set role, userId, and organizationId
-      setRole(decoded.role) // Optionally set role
-      setUserId(decoded.sub) // Optionally set user ID
-      console.log(useAuthStore.getState().userId)
+      setToken(_accessToken); // This will also set role, userId, and organizationId
+      setRole(decoded.role); // Optionally set role
+      setUserId(decoded.sub); // Optionally set user ID
+      console.log(useAuthStore.getState().userId);
 
-      setOrganizationId(decoded.organizationId) // Optionally set organization ID
+      setOrganizationId(decoded.organizationId); // Optionally set organization ID
 
       // Redirect to home page after successful sign-in
-      router.push('/home') // Change '/home' to your actual home route
+      router.push("/home"); // Change '/home' to your actual home route
     } catch (error: any) {
       if (error.response) {
-        console.error('Error signing in:', error.response.data)
+        console.error("Error signing in:", error.response.data);
       } else {
-        console.error('Sign In Failed:', error.message)
+        console.error("Sign In Failed:", error.message);
       }
     }
-  }
+  };
 
   return (
     <GestureHandlerRootView>
@@ -78,7 +78,7 @@ const Sign_In = () => {
             </View>
 
             <Formik<SignInFormValues>
-              initialValues={{ email: '', password: '' }}
+              initialValues={{ email: "", password: "" }}
               validationSchema={signInSchema}
               onSubmit={onSignInPress}
             >
@@ -96,8 +96,8 @@ const Sign_In = () => {
                     placeholder="Enter Email"
                     icon={icons.email}
                     value={values.email}
-                    onChangeText={handleChange('email')}
-                    onBlur={handleBlur('email')}
+                    onChangeText={handleChange("email")}
+                    onBlur={handleBlur("email")}
                     error={
                       touched.email && errors.email ? errors.email : undefined
                     }
@@ -109,8 +109,8 @@ const Sign_In = () => {
                     icon={icons.lock}
                     value={values.password}
                     secureTextEntry={true}
-                    onChangeText={handleChange('password')}
-                    onBlur={handleBlur('password')}
+                    onChangeText={handleChange("password")}
+                    onBlur={handleBlur("password")}
                     error={
                       touched.password && errors.password
                         ? errors.password
@@ -125,7 +125,7 @@ const Sign_In = () => {
                   />
 
                   <Link
-                    href="/(auth)/collegeInfo"
+                    href="/(auth)/sign-up"
                     className="font-JakartaSemiBold text-[15px] text-general-200 mt-8 text-center"
                   >
                     <Text>Don't have an Account? </Text>
@@ -138,7 +138,7 @@ const Sign_In = () => {
         </View>
       </ScrollView>
     </GestureHandlerRootView>
-  )
-}
+  );
+};
 
-export default Sign_In
+export default Sign_In;

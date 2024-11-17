@@ -10,9 +10,9 @@ module.exports = {
       'error',
       {
         endOfLine: 'auto', // Handles different environments with varying end-of-line styles
-        singleQuote: true, // Enforces single quotes for consistency
+        singleQuote: false, // Enforces single quotes for consistency
         trailingComma: 'es5', // Adds trailing commas where valid in ES5 (objects, arrays, etc.)
-        semi: false, // Disables semicolons to match modern JS styles
+        semi: true, // Disables semicolons to match modern JS styles
       },
     ],
     // Example rule overrides for flexibility (adjust as needed):
