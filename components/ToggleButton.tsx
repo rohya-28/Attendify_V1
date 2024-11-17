@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 
 interface ToggleButtonProps {
-  role: "student" | "admin";
+  role: "STUDENT" | "ADMIN";
   label: string;
   onToggle: () => void;
 }
@@ -20,21 +20,21 @@ const ToggleButton: React.FC<ToggleButtonProps> = ({
       {/* Toggle Button */}
       <View className="flex flex-row rounded-sm overflow-hidden border border-neutral-100">
         <TouchableOpacity
-          className={`flex-1 p-[12px] items-center justify-center ${role === "student" ? "bg-primary-500 text-white" : "bg-neutral-100 text-black"}`}
+          className={`flex-1 p-[12px] items-center justify-center ${role === "STUDENT" ? "bg-primary-500 text-white" : "bg-neutral-100 text-black"}`}
           onPress={onToggle}
         >
           <Text
-            className={`font-JakartaSemiBold text-sm ${role === "student" ? "text-white" : "text-black"}`}
+            className={`font-JakartaSemiBold text-sm ${role === "STUDENT" ? "text-white" : "text-black"}`}
           >
             Student
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
-          className={`flex-1 p-[12px] items-center justify-center ${role === "admin" ? "bg-primary-500 text-white" : "bg-neutral-100 text-black"}`}
+          className={`flex-1 p-[12px] items-center justify-center ${role === "ADMIN" ? "bg-primary-500 text-white" : "bg-neutral-100 text-black"}`}
           onPress={onToggle}
         >
           <Text
-            className={`font-JakartaSemiBold text-sm ${role === "admin" ? "text-white" : "text-black"}`}
+            className={`font-JakartaSemiBold text-sm ${role === "ADMIN" ? "text-white" : "text-black"}`}
           >
             Admin
           </Text>

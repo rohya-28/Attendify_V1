@@ -1,14 +1,14 @@
 // pages/Profile.tsx
-import React from 'react'
-import { View, Text, ScrollView } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import useUserStore from '@/store/useUserStore'
+import React from "react";
+import { View, Text, ScrollView, Alert, Button } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import useUserStore from "@/store/useUserStore";
 
 const Profile = () => {
-  const { user } = useUserStore() // Get user data from the store
+  const { user } = useUserStore(); // Get user data from the store
 
   if (!user) {
-    return <Text>No user data found</Text>
+    return <Text>No user data found</Text>;
   }
 
   return (
@@ -70,10 +70,26 @@ const Profile = () => {
               </View>
             </View>
           </View>
+
+          {/* logout button */}
+          <View className="mt-6 flex-1 justify-end w-24">
+            {/* <Button
+              title="Logout"
+              onPress={() => {
+                // Call the logout function
+                // This will clear the user data from the store and navigate to the login screen
+                logout();
+              }}
+            /> */}
+            <Button
+              title="Log out"
+              onPress={() => Alert.alert("Simple Button pressed")}
+            />
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>
-  )
-}
+  );
+};
 
-export default Profile
+export default Profile;

@@ -1,21 +1,21 @@
-import { Redirect } from 'expo-router'
-import { GestureHandlerRootView } from 'react-native-gesture-handler'
-import { LinkingOptions, NavigationContainer } from '@react-navigation/native'
-import * as Linking from 'expo-linking'
-import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import Verify from './(auth)/verify' // Your verification page
+import { Redirect } from "expo-router";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { LinkingOptions, NavigationContainer } from "@react-navigation/native";
+import * as Linking from "expo-linking";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import Verify from "./(auth)/verify"; // Your verification page
 
-const Stack = createNativeStackNavigator()
-const universal = Linking.createURL('https://attendify.example.com')
+const Stack = createNativeStackNavigator();
+const universal = Linking.createURL("https://attendify.example.com");
 
 const linking: LinkingOptions = {
-  prefixes: [universal, 'attendify://'],
+  prefixes: [universal, "attendify://"],
   config: {
     screens: {
-      Verify: 'verify', // Maps the URL myapp://verify to the Verify screen
+      Verify: "verify", // Maps the URL myapp://verify to the Verify screen
     },
   },
-}
+};
 
 export default function App() {
   return (
@@ -30,5 +30,5 @@ export default function App() {
       {/* <Redirect href="/(auth)/sign-in" /> */}
       {/* Optionally, redirect to other routes if necessary */}
     </GestureHandlerRootView>
-  )
+  );
 }
