@@ -15,6 +15,7 @@ interface Lecture {
 }
 
 interface Store {
+  [x: string]: any
   lectures: Lecture[]
   setLectures: (lectures: Lecture[]) => void
   addLecture: (lecture: Lecture) => void
@@ -27,6 +28,10 @@ const useLectureStore = create<Store>((set) => ({
   setLectures: (lectures) => set({ lectures }),
   addLecture: (lecture) =>
     set((state) => ({ lectures: [...state.lectures, lecture] })),
+  deleteLecture: (lectureId: string) =>
+    set((state) => ({
+      lectures: state.lectures.filter((lecture) => lecture._id !== lectureId),
+    })),
   updateLecture: (lectureId, updatedLecture) =>
     set((state) => ({
       lectures: state.lectures.map((lecture) =>

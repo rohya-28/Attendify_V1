@@ -17,10 +17,14 @@ import out from "@/assets/icons/out.png";
 import person from "@/assets/icons/person.png";
 import pin from "@/assets/icons/pin.png";
 import point from "@/assets/icons/point.png";
-import profile from "@/assets/icons/profile.png";
+import profile from "@/assets/icons/ProfileAPp.png";
+import startTime from "@/assets/icons/clock.png";
+import EndTime from "@/assets/icons/clock_1.png";
+import refresh from "@/assets/icons/refresh.png";
 import search from "@/assets/icons/search.png";
 import selectedMarker from "@/assets/icons/selected-marker.png";
 import star from "@/assets/icons/star.png";
+import trash from "@/assets/icons/trash.png";
 import target from "@/assets/icons/target.png";
 import to from "@/assets/icons/to.png";
 import onBoarding from "@/assets/images/icon.png";
@@ -42,6 +46,7 @@ export const images = {
 };
 
 export const icons = {
+  EndTime,
   chart,
   invite,
   arrowDown,
@@ -69,6 +74,9 @@ export const icons = {
   star,
   target,
   to,
+  startTime,
+  refresh,
+  trash,
 };
 
 export const onboarding = [

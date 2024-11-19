@@ -1,121 +1,134 @@
-import React, { useEffect, useState } from 'react'
-import CustomButton from '@/components/CustomButton'
-import DateTimeInput from '@/components/DateTimeInput'
-import InputField from '@/components/InputField'
-import { icons } from '@/constants'
-import useAuthStore from '@/store/useAuthStore'
-import useUserStore from '@/store/useUserStore'
-import { View, Text, Image } from 'react-native'
+import React, { useEffect, useState } from "react";
+import CustomButton from "@/components/CustomButton";
+import DateTimeInput from "@/components/DateTimeInput";
+import InputField from "@/components/InputField";
+import { icons } from "@/constants";
+import useAuthStore from "@/store/useAuthStore";
+import useUserStore from "@/store/useUserStore";
+import { View, Text, Image } from "react-native";
 import {
   GestureHandlerRootView,
   ScrollView,
-} from 'react-native-gesture-handler'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import collegeService from '@/api/collegeService'
-import useLectureStore from '@/store/useLectureStore'
+} from "react-native-gesture-handler";
+import { SafeAreaView } from "react-native-safe-area-context";
+import collegeService from "@/api/collegeService";
+import useLectureStore from "@/store/useLectureStore";
+import Loader from "@/components/Loader";
+import Toast from "react-native-toast-message";
+import { showCustomToast, toastConfig } from "@/components/Toast";
 
 const Home = () => {
-  const role = useAuthStore((state) => state.role)
-  const setUser = useUserStore((state) => state.setUser)
-  const setLectures = useLectureStore((state) => state.setLectures)
+  const role = useAuthStore((state) => state.role);
+  const setUser = useUserStore((state) => state.setUser);
+  const setLectures = useLectureStore((state) => state.setLectures);
 
-  const [startTime, setStartTime] = useState<Date | null>(null)
-  const [endTime, setEndTime] = useState<Date | null>(null)
-  const [attendanceCode, setAttendanceCode] = useState('')
-  const [subject, setSubject] = useState('')
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const [startTime, setStartTime] = useState<Date | null>(null);
+  const [endTime, setEndTime] = useState<Date | null>(null);
+  const [attendanceCode, setAttendanceCode] = useState("");
+  const [subject, setSubject] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [loadingMessage, setLoadingMessage] = useState("");
 
   // Fetch user and lecture data when the component mounts
   useEffect(() => {
     const fetchUserData = async () => {
+      setLoading(true);
+      setLoadingMessage("Loading Data...");
       try {
-        const response = await collegeService.getUserData()
-        setUser(response.user) // Store user data in Zustand
-        const responseLecture = await collegeService.getLectureData()
-        console.log('Hi Testing', responseLecture)
+        const response = await collegeService.getUserData();
+        setUser(response.user); // Store user data in Zustand
+        const responseLecture = await collegeService.getLectureData();
 
-        setLectures(responseLecture.lectures)
+        setLectures(responseLecture.lectures);
       } catch (err) {
-        setError(err.message)
+        setError(err.message);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
-    fetchUserData()
-  }, [setUser])
+    fetchUserData();
+  }, [setUser]);
 
   const handleSubmit = async () => {
-    let dayOfWeek = ''
+    setLoading(true);
+    setLoadingMessage("Creating Lecture...");
+    let dayOfWeek = "";
     if (startTime) {
-      const date = new Date(startTime)
-      dayOfWeek = date.toLocaleString('en-US', { weekday: 'long' })
+      const date = new Date(startTime);
+      dayOfWeek = date.toLocaleString("en-US", { weekday: "long" });
     }
 
-    const teacherId = useAuthStore.getState().userId
+    const teacherId = useAuthStore.getState().userId;
+
+    // Convert to UTC string (ISO format)
+    const startTimeUTC = startTime ? new Date(startTime).toISOString() : "";
+    const endTimeUTC = endTime ? new Date(endTime).toISOString() : "";
 
     const lectureData = {
       teacherId,
       subject,
-      startTime: startTime ? startTime.toISOString() : '',
-      endTime: endTime ? endTime.toISOString() : '',
+      startTime: startTimeUTC, // Use UTC time
+      endTime: endTimeUTC, // Use UTC time
       dayOfWeek,
-    }
+    };
 
-    if (role === 'STUDENT') {
-      console.log('Student Data Submitted:', {
+    if (role === "STUDENT") {
+      console.log("Student Data Submitted:", {
         attendanceCode,
-        startTime: startTime ? startTime.toISOString() : '',
-        endTime: endTime ? endTime.toISOString() : '',
-      })
-    } else if (role === 'ADMIN') {
-      console.log('Admin Data Submitted:', lectureData)
+        startTime: startTimeUTC,
+        endTime: endTimeUTC,
+      });
+    } else if (role === "ADMIN") {
       try {
-        const response = await collegeService.createLecture(lectureData)
-        if (response.success) {
-          console.log('Lecture Created:', response.data)
+        const response = await collegeService.createLecture(lectureData);
+        console.log(response);
+
+        if (response && response.Success) {
+          console.log("Lecture Created:", response);
+          showCustomToast("success", response.message); // Use the message from the response
         } else {
-          console.error('Error creating lecture:', response.message)
+          console.log(
+            "Error creating lecture:",
+            response.message || "Unexpected error"
+          );
+          showCustomToast(
+            "error",
+            response.message || "Failed to create lecture"
+          );
         }
       } catch (error: any) {
-        console.error(
-          'Error creating lecture:',
+        console.log(
+          "Error creating lecture:",
           error.response?.data || error.message
-        )
+        );
+        showCustomToast("error", error.message || "Failed to create lecture");
       }
     }
-  }
+    setLoading(false);
+  };
 
-  const { user } = useUserStore()
+  const { user } = useUserStore();
 
   return (
     <GestureHandlerRootView>
       <ScrollView>
         <SafeAreaView className="w-full h-full justify-center items-center bg-white">
-          <View className="h-full w-[95%]">
-            {loading ? (
-              <Text>Loading...</Text>
-            ) : error ? (
-              <Text>Error: {error}</Text>
-            ) : (
-              <Text></Text>
-            )}
-
+          <View className="h-auto w-[95%]">
             <View className="mt-2">
-              <View className="bg-[#0C0C0C] rounded-full h-12 w-12 justify-center items-center">
+              <View className="rounded-full h-14 w-14 justify-center items-center">
                 <Image
                   source={icons.profile}
-                  tintColor="white"
                   resizeMode="contain"
-                  className="w-10 h-10"
+                  className="w-10 h-10 rounded-full"
                 />
               </View>
               <View className="mt-6 shadow-lg">
                 <Text className="text-2xl font-JakartaLight text-slate-700">
                   Hello,
                 </Text>
-                <Text className="text-2xl font-JakartaSemiBold text-blue-600">
+                <Text className="text-2xl font-JakartaSemiBold text-blue-600 capitalize">
                   {user?.firstName} {user?.lastName}
                 </Text>
               </View>
@@ -140,7 +153,7 @@ const Home = () => {
               </View>
             </View>
 
-            {role === 'STUDENT' ? (
+            {role === "STUDENT" ? (
               <View className="mt-4 h-48 w-full rounded-md flex-col justify-between items-center border">
                 <InputField
                   label="Enter Attendance Code"
@@ -157,8 +170,8 @@ const Home = () => {
                 />
               </View>
             ) : (
-              <View className="mt-4 h-[550px] w-full flex-col items-center border border-yellow-500">
-                <View className="h-[80%] w-[100%] rounded-xl flex-col bg-[#F4F4FB] justify-around overflow-hidden">
+              <View className="mt-4 h-[380px] w-full rounded-xl mx-auto mt-4 bg-[#FFFFFF] shadow-lg rounded-lg mb-40 flex-col items-center">
+                <View className="h-[90%] w-[95%]  flex-col  justify-evenly overflow-hidden">
                   <InputField
                     label="Subject Name"
                     placeholder="Enter Subject Name"
@@ -175,16 +188,20 @@ const Home = () => {
                   <CustomButton
                     title="Submit"
                     onPress={handleSubmit}
-                    className="rounded-md mt-4"
+                    className="rounded-lg mt-2 shadow-none"
+                    bgVariant="secondary"
                   />
                 </View>
               </View>
             )}
           </View>
+
+          <Toast config={toastConfig} />
         </SafeAreaView>
       </ScrollView>
+      <Loader isVisible={loading} message={loadingMessage} />
     </GestureHandlerRootView>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;

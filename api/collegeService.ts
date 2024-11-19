@@ -1,6 +1,7 @@
 import axios from "axios";
 import { UserProfile, LectureData, LectureValues } from "@/types/type"; // Assuming LectureData is the correct type for creating a lecture
 import useAuthStore from "@/store/useAuthStore";
+import { mixedData } from "../store/mockData";
 
 const api = axios.create({
   baseURL: process.env.EXPO_PUBLIC_BASE_URL_HOSTED,
@@ -58,7 +59,6 @@ const collegeService = {
   // Create a new lecture
   createLecture: async (formData: LectureData) => {
     const token = useAuthStore.getState().token;
-    console.log(formData);
 
     try {
       const response = await api.post("/lecture/create", formData, {
@@ -69,8 +69,28 @@ const collegeService = {
       console.log("Lecture created:", formData);
       return response.data;
     } catch (error: any) {
-      console.error(
+      console.log(
         "Error creating lecture:",
+        error.response?.data || error.message
+      );
+      throw error;
+    }
+  },
+
+  deleteLecture: async (lectureId: string) => {
+    const token = useAuthStore.getState().token;
+
+    try {
+      const response = await api.delete(`/lecture/delete/${lectureId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log("Lecture deleted:", lectureId);
+      return response.data;
+    } catch (error: any) {
+      console.log(
+        "Error deleting lecture:",
         error.response?.data || error.message
       );
       throw error;
@@ -127,6 +147,26 @@ const collegeService = {
         "Error fetching lecture data:",
         error.response?.data || error.message
       );
+      throw error;
+    }
+  },
+  getMockAnalyticsData: async () => {
+    const token = useAuthStore.getState().token; // Assuming you're using token for authorization
+
+    try {
+      console.log("Fetching analytics data...");
+
+      // Simulating an API delay with mock data
+      const data = await new Promise((resolve) => {
+        setTimeout(() => {
+          resolve(mixedData); // Resolving with the mock data after 1 second
+        }, 1000);
+      });
+
+      console.log("Analytics data fetched:", data.lectures);
+      return data; // Return the mock analytics data
+    } catch (error) {
+      console.error("Error fetching analytics data:", error);
       throw error;
     }
   },

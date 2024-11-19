@@ -9,6 +9,10 @@ import * as Yup from "yup";
 import authService from "@/api/authService";
 import useAuthStore from "@/store/useAuthStore";
 import { jwtDecode } from "jwt-decode";
+import Toast from "react-native-toast-message";
+import { showCustomToast, toastConfig } from "@/components/Toast";
+import { useState } from "react";
+import Loader from "@/components/Loader"; // Import the Loader
 
 // Define the type for form values
 interface SignInFormValues {
@@ -33,7 +37,10 @@ const Sign_In = () => {
   const setUserId = useAuthStore((state) => state.setUserId);
   const setOrganizationId = useAuthStore((state) => state.setOrganizationId);
 
+  const [loading, setLoading] = useState(false);
+
   const onSignInPress = async (values: SignInFormValues) => {
+    setLoading(true);
     try {
       const response = await authService.signIn(values);
       console.log("Sign In Successful:", response);
@@ -50,15 +57,22 @@ const Sign_In = () => {
       console.log(useAuthStore.getState().userId);
 
       setOrganizationId(decoded.organizationId); // Optionally set organization ID
-
+      showCustomToast("success", "successful sign-in");
       // Redirect to home page after successful sign-in
       router.push("/home"); // Change '/home' to your actual home route
     } catch (error: any) {
+      // If the error is from the API response, show an error toast
       if (error.response) {
-        console.error("Error signing in:", error.response.data);
+        showCustomToast(
+          "error",
+          error.response.data.message || "Sign In Failed"
+        );
       } else {
-        console.error("Sign In Failed:", error.message);
+        // If the error is from another source (e.g., network issues), show a generic error toast
+        showCustomToast("error", "An error occurred. Please try again.");
       }
+    } finally {
+      setLoading(false); // Hide the loader
     }
   };
 
@@ -134,9 +148,12 @@ const Sign_In = () => {
                 </View>
               )}
             </Formik>
+
+            <Toast config={toastConfig} />
           </View>
         </View>
       </ScrollView>
+      <Loader isVisible={loading} message="Signing In..." />
     </GestureHandlerRootView>
   );
 };

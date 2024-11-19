@@ -20,7 +20,7 @@ const authService = {
       console.log("testing ", formData);
       return response.data;
     } catch (error: any) {
-      console.error("Error signing up:", error.response?.data || error.message);
+      console.log("Error signing up:", error.response?.data || error.message);
       throw error;
     }
   },
@@ -30,7 +30,7 @@ const authService = {
       const response = await api.post(`/user/signIn`, formData);
       return response.data;
     } catch (error: any) {
-      console.error("Error signing in:", error.response?.data || error.message);
+      console.log("Error signing in:", error.response?.data || error.message);
       throw error;
     }
   },

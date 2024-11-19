@@ -4,7 +4,7 @@ import { TouchableOpacity, Text } from "react-native";
 const getBgVariantStyle = (variant: ButtonProps["bgVariant"]) => {
   switch (variant) {
     case "secondary":
-      return "bg-gray-500";
+      return "bg-indigo-600";
     case "danger":
       return "bg-white";
     case "success":

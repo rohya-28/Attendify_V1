@@ -12,7 +12,7 @@ const linking: LinkingOptions = {
   prefixes: [universal, "attendify://"],
   config: {
     screens: {
-      Verify: "verify", // Maps the URL myapp://verify to the Verify screen
+      Verify: "verify",
     },
   },
 };
@@ -26,7 +26,7 @@ export default function App() {
           {/* You can add more screens here if needed */}
         </Stack.Navigator>
       </NavigationContainer>
-      <Redirect href="/(auth)/sign-in" />
+      <Redirect href="/(root)/(tabs)/report" />
       {/* <Redirect href="/(auth)/sign-in" /> */}
       {/* Optionally, redirect to other routes if necessary */}
     </GestureHandlerRootView>
