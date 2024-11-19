@@ -33,17 +33,16 @@ export const signUpSchema = Yup.object().shape({
   phoneNo: Yup.string()
     .matches(/^[0-9]{10}$/, "Phone number must be 10 digits")
     .required("Phone number is required"),
-  // organizationName: Yup.string().required("Organization name is required"),
-  // organizationId: Yup.string().required("Organization ID is required"),
-  // organizationId: Yup.string().optional(),
+  organizationName: Yup.string().required("Organization name is required"),
+  organizationId: Yup.string().required("Organization ID is required"),
 });
 
 const Sign_Up = () => {
-  const [role, setRole] = useState<"STUDENT" | "ADMIN">("ADMIN");
+  const [role, setRole] = useState<"STUDENT" | "TEACHER">("STUDENT");
 
   // Function to toggle role between student and admin
   const toggleRole = () => {
-    setRole((prevRole) => (prevRole === "STUDENT" ? "ADMIN" : "STUDENT"));
+    setRole((prevRole) => (prevRole === "STUDENT" ? "TEACHER" : "STUDENT"));
   };
 
   const router = useRouter();
@@ -71,7 +70,7 @@ const Sign_Up = () => {
               />
 
               <Text className="text-2xl text-black font-JakartaSemiBold absolute bottom-5 left-5">
-                Create Your Account
+                Signup as Student or Teacher
               </Text>
             </View>
 
@@ -173,7 +172,7 @@ const Sign_Up = () => {
                   />
 
                   {/* Organization Name Input Field */}
-                  {/* <InputField
+                  <InputField
                     label="Organization Name"
                     placeholder="Enter Organization Name"
                     icon={icons.building}
@@ -185,10 +184,10 @@ const Sign_Up = () => {
                         ? errors.organizationName
                         : undefined
                     }
-                  /> */}
+                  />
 
                   {/* Organization ID Input Field */}
-                  {/* <InputField
+                  <InputField
                     label="Organization ID"
                     placeholder="Enter Organization ID"
                     icon={icons.idCard}
@@ -200,7 +199,7 @@ const Sign_Up = () => {
                         ? errors.organizationId
                         : undefined
                     }
-                  /> */}
+                  />
 
                   {/* Password Input Field */}
                   <InputField
@@ -223,27 +222,17 @@ const Sign_Up = () => {
                     label="Select Your Role"
                     role={role}
                     onToggle={toggleRole}
+                    labelOne="Student"
                     labelTwo="Admin"
                   />
 
                   {/* Submit Button */}
-                  {/* <CustomButton
+                  <CustomButton
                     title="Sign Up"
                     onPress={handleSubmit as any}
                     className="mt-4"
-                  /> */}
+                  />
                   {/* trigger yup validation onpress next */}
-                  <Link
-                    href="/(auth)/collegeInfo"
-                    className="font-JakartaSemiBold text-[15px] text-general-200 mt-8 text-center"
-                  >
-                    <Text
-                      onPress={handleSubmit as any}
-                      className="text-primary-500"
-                    >
-                      Next{" "}
-                    </Text>
-                  </Link>
 
                   {/* Link to Sign In */}
                   <Link

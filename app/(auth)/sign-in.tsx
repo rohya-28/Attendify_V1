@@ -102,7 +102,6 @@ const Sign_In = () => {
                       touched.email && errors.email ? errors.email : undefined
                     }
                   />
-
                   <InputField
                     label="Password"
                     placeholder="Enter Password"
@@ -117,7 +116,6 @@ const Sign_In = () => {
                         : undefined
                     }
                   />
-
                   <CustomButton
                     title="Sign In"
                     onPress={handleSubmit}
@@ -129,7 +127,15 @@ const Sign_In = () => {
                     className="font-JakartaSemiBold text-[15px] text-general-200 mt-8 text-center"
                   >
                     <Text>Don't have an Account? </Text>
-                    <Text className="text-primary-500">Sign Up</Text>
+                    <Text className="text-primary-500">Sign Up as Admin</Text>
+                  </Link>
+                  <Link
+                    href="/(auth)/sign-up-student"
+                    className="font-JakartaSemiBold text-[15px] text-general-200 mt-8 text-center"
+                  >
+                    <Text className="text-primary-500">
+                      Sign Up as Student or Teacher{" "}
+                    </Text>
                   </Link>
                 </View>
               )}

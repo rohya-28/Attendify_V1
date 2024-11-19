@@ -60,6 +60,8 @@ const Invite = () => {
                 label="Select Role"
                 role={role}
                 onToggle={toggleRole}
+                labelOne="Student"
+                labelTwo="Teacher"
               />
 
               {/* Formik Form for Email Input */}
