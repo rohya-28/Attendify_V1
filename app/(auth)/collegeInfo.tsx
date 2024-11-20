@@ -33,33 +33,48 @@ const collegeInfoSchema = Yup.object().shape({
 
 const CollegeInfo = () => {
   const { location, errorMsg, loading } = useUserLocation();
-
-  useEffect(() => {
-    if (errorMsg) {
-      Alert.alert("Error", errorMsg);
-    }
-  }, [location, errorMsg]);
-
   const router = useRouter();
   const params = useLocalSearchParams();
 
-  console.log("params", params);
+  // Log params for debugging
+  useEffect(() => {
+    console.log("Params received:", params);
+    if (errorMsg) {
+      Alert.alert("Error", errorMsg);
+    }
+  }, [params, errorMsg]);
+
   const onRegisterPress = async (values: CollegeInfoFormValues) => {
+    // Validate required params
+    if (
+      !params.firstName ||
+      !params.lastName ||
+      !params.email ||
+      !params.phoneNo
+    ) {
+      console.error("Missing params:", params);
+      Alert.alert("Error", "Missing required parameters for registration.");
+      return;
+    }
+
+    // Construct the payload
     const payload = {
       firstName: params.firstName,
       lastName: params.lastName,
       email: params.email,
-      password: params.password,
+      password: params.password || "DefaultPass123!",
       role: params.role || "ADMIN",
       profilePic: params.profilePic,
       phoneNumber: params.phoneNo,
       organizationName: values.name,
+      address: values.address,
       location: {
-        latitude: parseFloat(values.latitude) || 0,
-        longitude: parseFloat(values.longitude) || 0,
+        latitude: parseFloat(values.latitude || "0"),
+        longitude: parseFloat(values.longitude || "0"),
       },
     };
-    console.log("payload", payload);
+
+    console.log("Payload being sent:", payload);
 
     try {
       const response = await authService.signUp(payload);
@@ -69,17 +84,20 @@ const CollegeInfo = () => {
       router.push("/(auth)/sign-in");
 
       Alert.alert("Success", "College Registered Successfully!");
-    } catch (error) {
-      console.error("College Registration Failed:", error);
-      Alert.alert(error);
+    } catch (error: any) {
+      console.error("API Error:", error.response?.data || error.message);
+      const errorMessage =
+        error.response?.data?.message || "An unexpected error occurred";
+      Alert.alert("Registration Error", errorMessage);
     }
   };
 
   return (
     <GestureHandlerRootView>
-      <ScrollView className="flex-1 bg-white ">
+      <ScrollView className="flex-1 bg-white">
         <View className="flex-1 bg-white">
           <View>
+            {/* Header Image and Title */}
             <View className="relative w-full h-[250px]">
               <Image
                 source={images.signUpCar}
@@ -90,7 +108,7 @@ const CollegeInfo = () => {
               </Text>
             </View>
 
-            {/* add back button to previous screen */}
+            {/* Back Button */}
             <View>
               <CustomButton
                 title="Back"
@@ -100,12 +118,13 @@ const CollegeInfo = () => {
               />
             </View>
 
+            {/* Formik Form */}
             <Formik<CollegeInfoFormValues>
               initialValues={{
                 name: "",
                 address: "",
-                latitude: location ? location.coords.latitude.toString() : "",
-                longitude: location ? location.coords.longitude.toString() : "",
+                latitude: location?.coords?.latitude?.toString() || "",
+                longitude: location?.coords?.longitude?.toString() || "",
               }}
               validationSchema={collegeInfoSchema}
               onSubmit={onRegisterPress}
@@ -120,6 +139,7 @@ const CollegeInfo = () => {
                 touched,
               }) => (
                 <View className="p-5">
+                  {/* Input Fields */}
                   <InputField
                     label="College Name"
                     placeholder="Enter College Name"
@@ -174,6 +194,8 @@ const CollegeInfo = () => {
                     }
                     editable={!loading}
                   />
+
+                  {/* Submit Button */}
                   {loading ? (
                     <Text>Loading location...</Text>
                   ) : (

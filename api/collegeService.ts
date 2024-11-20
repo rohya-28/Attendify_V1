@@ -106,7 +106,6 @@ const collegeService = {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log("User data fetched:", response.data);
       return response.data;
     } catch (error: any) {
       console.error(
@@ -126,7 +125,6 @@ const collegeService = {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log("lecture data fetched:", response.data);
       return response.data;
     } catch (error: any) {
       console.error(

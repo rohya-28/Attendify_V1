@@ -34,6 +34,20 @@ const authService = {
       throw error;
     }
   },
+  verifyCode: async (formData: { code: string }) => {
+    console.log("test", formData);
+
+    try {
+      const response = await api.post(`/user/verify-invite`, formData);
+      return response.data;
+    } catch (error: any) {
+      console.log(
+        "Error verifying code:",
+        error.response?.data || error.message
+      );
+      throw error;
+    }
+  },
 };
 
 export default authService;

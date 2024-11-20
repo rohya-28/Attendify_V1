@@ -35,7 +35,6 @@ const Invite = () => {
     setLoadingMessage("Refreshing..");
     try {
       const responseLecture = await collegeService.getLectureData();
-      console.log(responseLecture);
 
       setLectures(responseLecture.lectures);
     } catch (err) {

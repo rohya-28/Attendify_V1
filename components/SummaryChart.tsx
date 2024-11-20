@@ -32,7 +32,6 @@ const SummaryChart = () => {
       try {
         if (chartPeriod === Period.week) {
           const { startDate, endDate } = getWeekRange(currentDate);
-          console.log(startDate, endDate);
 
           setCurrentEndDate(() => new Date(endDate));
           const weeklyAttendanceData = await fetchAttendanceData(
@@ -40,7 +39,6 @@ const SummaryChart = () => {
             endDate,
             AttendenceType
           );
-          console.log("testi", weeklyAttendanceData);
           const processedData = processWeeklyAttendanceData(
             weeklyAttendanceData,
             6
@@ -72,7 +70,6 @@ const SummaryChart = () => {
       // Fetch the attendance data from the API
       const response = await collegeService.getMockAnalyticsData();
       const { lectures } = response;
-      console.log("testing", lectures);
 
       // Process the data to extract attendance info per day
       const formattedResult = lectures.map((lecture: any) => {

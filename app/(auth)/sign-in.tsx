@@ -13,6 +13,7 @@ import Toast from "react-native-toast-message";
 import { showCustomToast, toastConfig } from "@/components/Toast";
 import { useState } from "react";
 import Loader from "@/components/Loader"; // Import the Loader
+import { getToken, storeToken } from "@/store/asyncStore";
 
 // Define the type for form values
 interface SignInFormValues {
@@ -48,13 +49,12 @@ const Sign_In = () => {
 
       // Decode the token to get user info
       const decoded = jwtDecode<DecodedToken>(_accessToken);
-      console.log("Decoded Token:", decoded);
 
       // Set token and user details in the store
       setToken(_accessToken); // This will also set role, userId, and organizationId
+      await storeToken(_accessToken);
       setRole(decoded.role); // Optionally set role
       setUserId(decoded.sub); // Optionally set user ID
-      console.log(useAuthStore.getState().userId);
 
       setOrganizationId(decoded.organizationId); // Optionally set organization ID
       showCustomToast("success", "successful sign-in");

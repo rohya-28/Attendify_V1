@@ -40,6 +40,8 @@ export const signUpSchema = Yup.object().shape({
 
 const Sign_Up = () => {
   const [role, setRole] = useState<"STUDENT" | "ADMIN">("ADMIN");
+  const [verifyCode, setVerifyCode] = useState("");
+  const [isVerified, setIsVerified] = useState(false);
 
   // Function to toggle role between student and admin
   const toggleRole = () => {
@@ -57,6 +59,23 @@ const Sign_Up = () => {
         role,
       },
     });
+  };
+
+  const handleVerifyCode = async (code: string, setValues: any) => {
+    console.log("Entered Code:", verifyCode);
+
+    const response = await authService.verifyCode({ code });
+    console.log("Sign In Successful:", response);
+
+    setValues({
+      email: response.email || "",
+      organizationName: response.organizationName || "",
+      role: response.role || "", // assuming this exists in your response
+      organizationId: response.organizationId || "", // assuming this exists in your response
+    });
+    setIsVerified(true); // Mark as verified
+
+    // You can add additional logic here, e.g., API calls to verify the code
   };
 
   return (
@@ -85,6 +104,7 @@ const Sign_Up = () => {
                 phoneNo: "",
                 organizationName: "",
                 organizationId: "",
+                role,
               }}
               validationSchema={signUpSchema}
               onSubmit={onSignUpPress}
@@ -96,8 +116,29 @@ const Sign_Up = () => {
                 values,
                 errors,
                 touched,
+                setValues,
               }) => (
                 <View className="p-5">
+                  <View className="flex flex-row justify-between items-end w-full">
+                    {/* First Name Input Field */}
+                    <View className="w-[55%]">
+                      <InputField
+                        label="Verify"
+                        placeholder="Enter Code"
+                        icon={icons.person}
+                        value={verifyCode}
+                        onChangeText={setVerifyCode}
+                        onBlur={handleBlur("firstName")}
+                      />
+                    </View>
+                    <View className="w-[40%] mb-2">
+                      <CustomButton
+                        title="verify code"
+                        className="rounded-sm font-JakartaLight text-sm"
+                        onPress={() => handleVerifyCode(verifyCode, setValues)}
+                      />
+                    </View>
+                  </View>
                   {/* First Name Input Field */}
                   <InputField
                     label="First Name"
@@ -136,13 +177,14 @@ const Sign_Up = () => {
                     value={values.email}
                     onChangeText={handleChange("email")}
                     onBlur={handleBlur("email")}
+                    editable={!isVerified}
                     error={
                       touched.email && errors.email ? errors.email : undefined
                     }
                   />
 
                   {/* Profile Pic Input Field */}
-                  {/* <InputField
+                  <InputField
                     label="Profile Pic"
                     placeholder="Profile Pic"
                     icon={icons.person}
@@ -154,7 +196,7 @@ const Sign_Up = () => {
                         ? errors.profilePic
                         : undefined
                     }
-                  /> */}
+                  />
 
                   {/* Phone No Input Field */}
                   <InputField
@@ -173,25 +215,26 @@ const Sign_Up = () => {
                   />
 
                   {/* Organization Name Input Field */}
-                  {/* <InputField
+                  <InputField
                     label="Organization Name"
                     placeholder="Enter Organization Name"
-                    icon={icons.building}
+                    icon={icons.email}
                     value={values.organizationName}
                     onChangeText={handleChange("organizationName")}
                     onBlur={handleBlur("organizationName")}
+                    editable={!isVerified}
                     error={
                       touched.organizationName && errors.organizationName
                         ? errors.organizationName
                         : undefined
                     }
-                  /> */}
+                  />
 
                   {/* Organization ID Input Field */}
-                  {/* <InputField
+                  <InputField
                     label="Organization ID"
                     placeholder="Enter Organization ID"
-                    icon={icons.idCard}
+                    icon={icons.email}
                     value={values.organizationId}
                     onChangeText={handleChange("organizationId")}
                     onBlur={handleBlur("organizationId")}
@@ -200,7 +243,7 @@ const Sign_Up = () => {
                         ? errors.organizationId
                         : undefined
                     }
-                  /> */}
+                  />
 
                   {/* Password Input Field */}
                   <InputField
@@ -222,7 +265,8 @@ const Sign_Up = () => {
                   <ToggleButton
                     label="Select Your Role"
                     role={role}
-                    onToggle={toggleRole}
+                    onToggle={isVerified ? toggleRole : ""}
+                    isDisabled={isVerified}
                   />
 
                   {/* Submit Button */}

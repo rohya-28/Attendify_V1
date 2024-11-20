@@ -83,7 +83,6 @@ const Home = () => {
     } else if (role === "ADMIN") {
       try {
         const response = await collegeService.createLecture(lectureData);
-        console.log(response);
 
         if (response && response.Success) {
           console.log("Lecture Created:", response);
