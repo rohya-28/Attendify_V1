@@ -6,6 +6,7 @@ interface ToggleButtonProps {
   label: string;
   onToggle: (newRole: "STUDENT" | "ADMIN") => void;
   isDisabled?: boolean; // Prop to control toggling
+  inviteScreen?: boolean; // Prop to control toggling
 }
 
 const ToggleButton: React.FC<ToggleButtonProps> = ({
@@ -13,6 +14,7 @@ const ToggleButton: React.FC<ToggleButtonProps> = ({
   label,
   onToggle,
   isDisabled = false, // Default value
+  inviteScreen = false, // Default value
 }) => {
   return (
     <View className="my-2 w-full">
@@ -51,7 +53,7 @@ const ToggleButton: React.FC<ToggleButtonProps> = ({
               role === "ADMIN" ? "text-white" : "text-black"
             }`}
           >
-            Admin
+            {inviteScreen ? "Teacher" : "Admin"}
           </Text>
         </TouchableOpacity>
       </View>

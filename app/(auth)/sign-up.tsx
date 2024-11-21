@@ -11,6 +11,10 @@ import authService from "@/api/authService";
 
 import * as Yup from "yup";
 import { Formik, FormikValues } from "formik";
+import { showCustomToast, toastConfig } from "@/components/Toast";
+
+import Loader from "@/components/Loader";
+import Toast from "react-native-toast-message";
 
 // Validation schema using Yup
 export const signUpSchema = Yup.object().shape({
@@ -42,6 +46,7 @@ const Sign_Up = () => {
   const [role, setRole] = useState<"STUDENT" | "ADMIN">("ADMIN");
   const [verifyCode, setVerifyCode] = useState("");
   const [isVerified, setIsVerified] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   // Function to toggle role between student and admin
   const toggleRole = () => {
@@ -50,40 +55,78 @@ const Sign_Up = () => {
 
   const router = useRouter();
 
+  // const handleVerifyCode = async (code: string, setValues: any) => {
+  //   console.log("Entered Code:", verifyCode);
+
+  //   try {
+  //     const response = await authService.verifyCode({ code });
+  //     console.log("Verification Successful:", response);
+
+  //     setValues({
+  //       email: response.email || "",
+  //       organizationName: response.organizationName || "",
+  //       role: response.role === "TEACHER" ? "TEACHER" : "STUDENT" || "", // assuming this exists in your response
+  //       organizationId: response.organizationId || "", // assuming this exists in your response
+  //     });
+  //     setIsVerified(true);
+  //   } catch (error: any) {
+  //     console.error("Verification Failed:", error);
+
+  //     // If the error is from the API response, show an error toast
+  //     if (error.response) {
+  //       showCustomToast(
+  //         "error",
+  //         error.response.data.message || "Verification Failed"
+  //       );
+  //     } else {
+  //       // If the error is from another source (e.g., network issues), show a generic error toast
+  //       showCustomToast("error", "An error occurred. Please try again.");
+  //     }
+  //   } finally {
+  //     console.log("Verification Done");
+
+  //     setLoading(false);
+  //   }
+  // };
+
   const handleVerifyCode = async (code: string, setValues: any) => {
-    console.log("Entered Code:", verifyCode);
+    console.log("Entered Code:", code);
+    setLoading(true);
+    try {
+      const response = await authService.verifyCode({ code });
+      console.log("Verification Successful:", response);
 
-    const response = await authService.verifyCode({ code });
-    console.log("Verification Successful:", response);
+      setValues({
+        email: response.email || "",
+        organizationName: response.organizationName || "",
+        role: response.role === "TEACHER" ? "TEACHER" : "STUDENT" || "",
+        organizationId: response.organizationId || "",
+      });
+      showCustomToast("success", "successfully verified");
 
-    setValues({
-      email: response.email || "",
-      organizationName: response.organizationName || "",
-      role: response.role === "TEACHER" ? "TEACHER" : "STUDENT" || "", // assuming this exists in your response
-      organizationId: response.organizationId || "", // assuming this exists in your response
-    });
-    setIsVerified(true); // Mark as verified
-
-    // You can add additional logic here, e.g., API calls to verify the code
+      setIsVerified(true);
+    } catch (error: any) {
+      if (error.response) {
+        const errorMessage =
+          error.response.data?.message || "Verification Failed";
+        console.log("API Error Message:", errorMessage); // Debugging
+        showCustomToast("error", errorMessage);
+      } else {
+        console.log("Generic Error:", error.message); // Debugging
+        showCustomToast("error", "An error occurred. Please try again.");
+      }
+    } finally {
+      console.log("Verification Done");
+      setLoading(false);
+    }
   };
 
   // Handle form submission
   const onSignUpPress = async (values: FormikValues) => {
-    router.push({
-      pathname: "/(auth)/collegeInfo",
-      params: {
-        ...values,
-        role,
-      },
-    });
-
     try {
       if (isVerified) {
-        // Example API call
-        console.log(role);
-        console.log("mkmdkm", values);
-
         const response = await authService.signUp({ ...values });
+
         console.log("Sign Up Successful:", response);
         router.push("/(auth)/sign-in");
       } else {
@@ -146,7 +189,7 @@ const Sign_Up = () => {
                     <View className="w-[55%]">
                       <InputField
                         label="Verify"
-                        placeholder="Enter Code"
+                        placeholder="Enter College Code"
                         icon={icons.person}
                         value={verifyCode}
                         onChangeText={setVerifyCode}
@@ -332,8 +375,10 @@ const Sign_Up = () => {
               )}
             </Formik>
           </View>
+          <Toast config={toastConfig} />
         </View>
       </ScrollView>
+      <Loader isVisible={loading} message=" Verifying code...  " />
     </GestureHandlerRootView>
   );
 };

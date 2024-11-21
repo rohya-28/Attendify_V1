@@ -27,10 +27,10 @@ const Profile = () => {
   const roleUser = useAuthStore((state) => state.role);
 
   const currentDateTime = useCurrentDateTime(); // Get current date and time
-  const [role, setRole] = useState<"STUDENT" | "ADMIN">("STUDENT"); // Role state for toggling between student and admin
+  const [role, setRole] = useState<"STUDENT" | "TEACHER">("STUDENT"); // Role state for toggling between student and admin
 
   // Function to toggle between roles
-  const toggleRole = (newRole: "STUDENT" | "ADMIN") => {
+  const toggleRole = (newRole: "STUDENT" | "TEACHER") => {
     setRole(newRole);
   };
 
@@ -106,6 +106,7 @@ const Profile = () => {
                 </Text>
                 <Text className="text-sm text-gray-900">{`${user.firstName} ${user.lastName}`}</Text>
               </View>
+
               {/* Email */}
               <View className="py-3 flex-row justify-between">
                 <Text className="text-sm font-medium text-gray-500">
@@ -131,15 +132,20 @@ const Profile = () => {
                   {user.organizationId}
                 </Text>
               </View>
+
+              {/* role */}
+              <View className="py-3 flex-row justify-between">
+                <Text className="text-sm font-medium text-gray-500">Role</Text>
+                <Text className="text-sm text-gray-900">{roleUser}</Text>
+              </View>
             </View>
           </View>
 
           {/* Logout Button */}
-          <View className="mt-6 flex-1 justify-end w-24">
-            <Button title="Log out" onPress={handleLogout} />
-          </View>
+          <View className="mt-6 flex-1 justify-end w-24"></View>
+          <Button title="Log out" onPress={handleLogout} />
 
-          {roleUser === "ADMIN" ? (
+          {roleUser === "TEACHER" || roleUser === "ADMIN" ? (
             <>
               <View className="h-72 w-full mt-4 mb-32 border bg-[#F5F9FF] border-[#61A2FE] drop-shadow-2xl ">
                 {/* Invite Form Section */}
@@ -150,6 +156,7 @@ const Profile = () => {
                       label="Select Role"
                       role={role}
                       onToggle={toggleRole}
+                      inviteScreen={true} // Pass prop to control toggling only for invite screen TODO: alert change later
                     />
 
                     {/* Formik Form for Email Input */}
@@ -193,7 +200,7 @@ const Profile = () => {
                           {/* Submit Button */}
                           <View className="h-[30%] w-[94%] ml-3 flex flex-col justify-center">
                             <CustomButton
-                              title={`Send Invite as ${role}`}
+                              title={`Send Invite as ${role === "STUDENT" ? "Student" : "Teacher"}`}
                               className="rounded-md"
                               onPress={handleSubmit as any}
                             />

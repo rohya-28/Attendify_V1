@@ -118,7 +118,7 @@ const Invite = () => {
     <SafeAreaView className="flex-1 bg-white p-5 ">
       <ScrollView contentContainerStyle={{ flexGrow: 1, position: "relative" }}>
         <View className="fixed flex flex-row justify-between items-center">
-          <Text className="text-2xl font-JakartaBold ">Invite</Text>
+          <Text className="text-2xl font-JakartaBold ">Lectures</Text>
           <TouchableOpacity
             onPress={fetchLecturesData}
             className="p-2 rounded-full bg-indigo-600"
@@ -170,7 +170,11 @@ const Invite = () => {
               </View>
               <View className="w-[100%] items-center mt-8">
                 <CustomButton
-                  title={role === "ADMIN" ? "Start Session" : "Mark Attendance"}
+                  title={
+                    role === "ADMIN" || role === "TEACHER"
+                      ? "Start Session"
+                      : "Mark Attendance"
+                  }
                   className="w-[95%] rounded-lg"
                   bgVariant="danger"
                   textVariant="secondary"

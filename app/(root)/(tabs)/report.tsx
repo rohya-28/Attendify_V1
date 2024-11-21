@@ -8,7 +8,7 @@ const Report = () => {
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <View className="w-auto">
           <View className="fixed">
-            <Text className="text-2xl font-JakartaBold ">Report</Text>
+            <Text className="text-2xl font-JakartaBold ">Analytics</Text>
           </View>
           <View className="w-[100%] flex justify-center items-center">
             <SummaryChart />
