@@ -50,7 +50,7 @@ const CollegeInfo = () => {
       !params.firstName ||
       !params.lastName ||
       !params.email ||
-      !params.phoneNo
+      !params.phoneNumber
     ) {
       console.error("Missing params:", params);
       Alert.alert("Error", "Missing required parameters for registration.");
@@ -65,7 +65,7 @@ const CollegeInfo = () => {
       password: params.password || "DefaultPass123!",
       role: params.role || "ADMIN",
       profilePic: params.profilePic,
-      phoneNumber: params.phoneNo,
+      phoneNumber: params.phoneNumber,
       organizationName: values.name,
       address: values.address,
       location: {

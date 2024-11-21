@@ -59,7 +59,7 @@ const Sign_Up = () => {
     setValues({
       email: response.email || "",
       organizationName: response.organizationName || "",
-      role: response.role === "TEACHER" ? "ADMIN" : "STUDENT" || "", // assuming this exists in your response
+      role: response.role === "TEACHER" ? "TEACHER" : "STUDENT" || "", // assuming this exists in your response
       organizationId: response.organizationId || "", // assuming this exists in your response
     });
     setIsVerified(true); // Mark as verified
@@ -76,7 +76,7 @@ const Sign_Up = () => {
         role,
       },
     });
-    console.log(values);
+
     try {
       if (isVerified) {
         // Example API call
@@ -199,7 +199,6 @@ const Sign_Up = () => {
                     value={values.email}
                     onChangeText={handleChange("email")}
                     onBlur={handleBlur("email")}
-                    editable={!isVerified}
                     error={
                       touched.email && errors.email ? errors.email : undefined
                     }
@@ -222,13 +221,13 @@ const Sign_Up = () => {
 
                   {/* Phone No Input Field */}
                   <InputField
-                    label="Phone No3"
+                    label="Phone No"
                     placeholder="Enter Phone No"
                     icon={icons.email}
                     value={values.phoneNumber}
                     keyboardType="numeric"
                     onChangeText={handleChange("phoneNumber")}
-                    onBlur={handleBlur("phoneNo")}
+                    onBlur={handleBlur("phoneNumber")}
                     error={
                       touched.phoneNumber && errors.phoneNumber
                         ? errors.phoneNumber
@@ -244,7 +243,6 @@ const Sign_Up = () => {
                     value={values.organizationName}
                     onChangeText={handleChange("organizationName")}
                     onBlur={handleBlur("organizationName")}
-                    editable={!isVerified}
                     error={
                       touched.organizationName && errors.organizationName
                         ? errors.organizationName
@@ -257,7 +255,7 @@ const Sign_Up = () => {
                     <InputField
                       label="Organization ID"
                       placeholder="Enter Organization ID"
-                      icon={icons.email}
+                      icon={icons.idCard}
                       value={values.organizationId}
                       onChangeText={handleChange("organizationId")}
                       onBlur={handleBlur("organizationId")}
@@ -268,7 +266,7 @@ const Sign_Up = () => {
                       }
                     />
                   ) : (
-                    ""
+                    <></>
                   )}
 
                   {/* Password Input Field */}
@@ -309,17 +307,17 @@ const Sign_Up = () => {
                   {!isVerified ? (
                     <Link
                       href="/(auth)/collegeInfo"
-                      className="font-JakartaSemiBold text-[15px] py-4 rounded-lg shadow mt-8 text-center"
+                      className="font-JakartaSemiBold text-[15px] text-general-200 mt-8 text-center"
                     >
                       <Text
                         onPress={handleSubmit as any}
-                        className="text-primary-500 "
+                        className="text-primary-500"
                       >
                         Next{" "}
                       </Text>
                     </Link>
                   ) : (
-                    ""
+                    <></>
                   )}
 
                   {/* Link to Sign In */}

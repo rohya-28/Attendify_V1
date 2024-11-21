@@ -27,7 +27,7 @@ export default function App() {
         </Stack.Navigator>
       </NavigationContainer>
       {/* <Redirect href="/(root)/(tabs)/report" /> */}
-      <Redirect href="/(auth)/welcome" />
+      <Redirect href="/(auth)/sign-up" />
       {/* Optionally, redirect to other routes if necessary */}
     </GestureHandlerRootView>
   );
