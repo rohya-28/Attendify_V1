@@ -30,7 +30,7 @@ export const signUpSchema = Yup.object().shape({
     .required("Password is required"),
   profilePic:
     Yup.string().url("Invalid URL for profile picture").optional() || null,
-  phoneNo: Yup.string()
+  phoneNumber: Yup.string()
     .matches(/^[0-9]{10}$/, "Phone number must be 10 digits")
     .required("Phone number is required"),
   // organizationName: Yup.string().required("Organization name is required"),
@@ -50,6 +50,23 @@ const Sign_Up = () => {
 
   const router = useRouter();
 
+  const handleVerifyCode = async (code: string, setValues: any) => {
+    console.log("Entered Code:", verifyCode);
+
+    const response = await authService.verifyCode({ code });
+    console.log("Verification Successful:", response);
+
+    setValues({
+      email: response.email || "",
+      organizationName: response.organizationName || "",
+      role: response.role === "TEACHER" ? "ADMIN" : "STUDENT" || "", // assuming this exists in your response
+      organizationId: response.organizationId || "", // assuming this exists in your response
+    });
+    setIsVerified(true); // Mark as verified
+
+    // You can add additional logic here, e.g., API calls to verify the code
+  };
+
   // Handle form submission
   const onSignUpPress = async (values: FormikValues) => {
     router.push({
@@ -59,23 +76,28 @@ const Sign_Up = () => {
         role,
       },
     });
-  };
+    console.log(values);
+    try {
+      if (isVerified) {
+        // Example API call
+        console.log(role);
+        console.log("mkmdkm", values);
 
-  const handleVerifyCode = async (code: string, setValues: any) => {
-    console.log("Entered Code:", verifyCode);
-
-    const response = await authService.verifyCode({ code });
-    console.log("Sign In Successful:", response);
-
-    setValues({
-      email: response.email || "",
-      organizationName: response.organizationName || "",
-      role: response.role || "", // assuming this exists in your response
-      organizationId: response.organizationId || "", // assuming this exists in your response
-    });
-    setIsVerified(true); // Mark as verified
-
-    // You can add additional logic here, e.g., API calls to verify the code
+        const response = await authService.signUp({ ...values });
+        console.log("Sign Up Successful:", response);
+        router.push("/(auth)/sign-in");
+      } else {
+        router.push({
+          pathname: "/(auth)/collegeInfo",
+          params: {
+            ...values,
+            role,
+          },
+        });
+      }
+    } catch (error) {
+      console.error("Sign Up Failed:", error);
+    }
   };
 
   return (
@@ -101,7 +123,7 @@ const Sign_Up = () => {
                 email: "",
                 password: "",
                 profilePic: "",
-                phoneNo: "",
+                phoneNumber: "",
                 organizationName: "",
                 organizationId: "",
                 role,
@@ -200,16 +222,16 @@ const Sign_Up = () => {
 
                   {/* Phone No Input Field */}
                   <InputField
-                    label="Phone No"
+                    label="Phone No3"
                     placeholder="Enter Phone No"
                     icon={icons.email}
-                    value={values.phoneNo}
+                    value={values.phoneNumber}
                     keyboardType="numeric"
-                    onChangeText={handleChange("phoneNo")}
+                    onChangeText={handleChange("phoneNumber")}
                     onBlur={handleBlur("phoneNo")}
                     error={
-                      touched.phoneNo && errors.phoneNo
-                        ? errors.phoneNo
+                      touched.phoneNumber && errors.phoneNumber
+                        ? errors.phoneNumber
                         : undefined
                     }
                   />
@@ -231,19 +253,23 @@ const Sign_Up = () => {
                   />
 
                   {/* Organization ID Input Field */}
-                  <InputField
-                    label="Organization ID"
-                    placeholder="Enter Organization ID"
-                    icon={icons.email}
-                    value={values.organizationId}
-                    onChangeText={handleChange("organizationId")}
-                    onBlur={handleBlur("organizationId")}
-                    error={
-                      touched.organizationId && errors.organizationId
-                        ? errors.organizationId
-                        : undefined
-                    }
-                  />
+                  {isVerified ? (
+                    <InputField
+                      label="Organization ID"
+                      placeholder="Enter Organization ID"
+                      icon={icons.email}
+                      value={values.organizationId}
+                      onChangeText={handleChange("organizationId")}
+                      onBlur={handleBlur("organizationId")}
+                      error={
+                        touched.organizationId && errors.organizationId
+                          ? errors.organizationId
+                          : undefined
+                      }
+                    />
+                  ) : (
+                    ""
+                  )}
 
                   {/* Password Input Field */}
                   <InputField
@@ -264,29 +290,37 @@ const Sign_Up = () => {
                   {/* Toggle Button for Role */}
                   <ToggleButton
                     label="Select Your Role"
-                    role={role}
-                    onToggle={isVerified ? toggleRole : ""}
+                    role={isVerified ? values.role : role}
+                    onToggle={toggleRole}
                     isDisabled={isVerified}
                   />
 
                   {/* Submit Button */}
-                  {/* <CustomButton
-                    title="Sign Up"
-                    onPress={handleSubmit as any}
-                    className="mt-4"
-                  /> */}
-                  {/* trigger yup validation onpress next */}
-                  <Link
-                    href="/(auth)/collegeInfo"
-                    className="font-JakartaSemiBold text-[15px] text-general-200 mt-8 text-center"
-                  >
-                    <Text
+                  {isVerified ? (
+                    <CustomButton
+                      title="Sign Up"
                       onPress={handleSubmit as any}
-                      className="text-primary-500"
+                      className="mt-4"
+                    />
+                  ) : (
+                    ""
+                  )}
+                  {/* trigger yup validation onpress next */}
+                  {!isVerified ? (
+                    <Link
+                      href="/(auth)/collegeInfo"
+                      className="font-JakartaSemiBold text-[15px] py-4 rounded-lg shadow mt-8 text-center"
                     >
-                      Next{" "}
-                    </Text>
-                  </Link>
+                      <Text
+                        onPress={handleSubmit as any}
+                        className="text-primary-500 "
+                      >
+                        Next{" "}
+                      </Text>
+                    </Link>
+                  ) : (
+                    ""
+                  )}
 
                   {/* Link to Sign In */}
                   <Link

@@ -21,13 +21,13 @@ const ToggleButton: React.FC<ToggleButtonProps> = ({
 
       {/* Toggle Button */}
       <View className="flex flex-row rounded-sm overflow-hidden border border-neutral-100">
+        {/* Student Button */}
         <TouchableOpacity
           className={`flex-1 p-[12px] items-center justify-center ${
-            role === "STUDENT"
-              ? "bg-primary-500"
-              : "bg-neutral-100"
-          } ${isDisabled ? "opacity-50" : ""}`} // Change opacity when disabled
+            role === "STUDENT" ? "bg-primary-500" : "bg-neutral-100"
+          } ${isDisabled ? "opacity-50" : ""}`} // Adjust opacity when disabled
           onPress={() => !isDisabled && onToggle("STUDENT")} // Prevent toggle if disabled
+          disabled={isDisabled} // Disable interaction
         >
           <Text
             className={`font-JakartaSemiBold text-sm ${
@@ -37,11 +37,14 @@ const ToggleButton: React.FC<ToggleButtonProps> = ({
             Student
           </Text>
         </TouchableOpacity>
+
+        {/* Admin Button */}
         <TouchableOpacity
           className={`flex-1 p-[12px] items-center justify-center ${
             role === "ADMIN" ? "bg-primary-500" : "bg-neutral-100"
-          } ${isDisabled ? "opacity-50" : ""}`} // Change opacity when disabled
+          } ${isDisabled ? "opacity-50" : ""}`} // Adjust opacity when disabled
           onPress={() => !isDisabled && onToggle("ADMIN")} // Prevent toggle if disabled
+          disabled={isDisabled} // Disable interaction
         >
           <Text
             className={`font-JakartaSemiBold text-sm ${

@@ -38,7 +38,7 @@ const CollegeInfo = () => {
 
   // Log params for debugging
   useEffect(() => {
-    console.log("Params received:", params);
+    console.log("Params received at collage Page:", params);
     if (errorMsg) {
       Alert.alert("Error", errorMsg);
     }

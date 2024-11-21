@@ -1,20 +1,20 @@
-// pages/Profile.tsx
-import React from "react";
-import { View, Text, ScrollView, Alert, Button } from "react-native";
+import React, { useState } from "react";
+import { View, Text, ScrollView, Button, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import useUserStore from "@/store/useUserStore";
 import useCurrentDateTime from "@/hooks/useUserDateTime";
 import CustomButton from "@/components/CustomButton";
 import InputField from "@/components/InputField";
 import { icons } from "@/constants";
-import { useState } from "react";
 import ToggleButton from "@/components/ToggleButton";
 import * as Yup from "yup";
 import { Formik } from "formik";
 import useAuthStore from "@/store/useAuthStore";
-import { LinearGradient } from "expo-linear-gradient";
 import { deleteToken } from "@/store/asyncStore";
 import { router } from "expo-router";
+import axios from "axios";
+import authService from "@/api/authService";
+import collegeService from "@/api/collegeService";
 
 export const inviteSchema = Yup.object().shape({
   email: Yup.string()
@@ -30,14 +30,36 @@ const Profile = () => {
   const [role, setRole] = useState<"STUDENT" | "ADMIN">("STUDENT"); // Role state for toggling between student and admin
 
   // Function to toggle between roles
-  const toggleRole = () => {
-    setRole((prevRole) => (prevRole === "STUDENT" ? "ADMIN" : "STUDENT"));
+  const toggleRole = (newRole: "STUDENT" | "ADMIN") => {
+    setRole(newRole);
   };
 
   // Function to handle form submission
-  const submitInviteForm = (values: { email: string }) => {
-    console.log(`Inviting ${values.email} as a ${role}`);
-    // Add further logic to handle the invitation process here
+  const submitInviteForm = async (values: { email: string }) => {
+    try {
+      const payload = {
+        email: values.email,
+        role,
+        base_url_client: "http://localhost:2002/",
+      };
+
+      const response = await collegeService.inviteUser(payload);
+
+      if (response.message === "User invited") {
+        Alert.alert("Success", `Invite sent to ${values.email} as ${role}`);
+      } else {
+        Alert.alert("Error", `Unexpected response: ${response.status}`);
+      }
+    } catch (error: any) {
+      if (error.response) {
+        Alert.alert(
+          "Error",
+          error.response.data.message || "Something went wrong"
+        );
+      } else {
+        Alert.alert("Error", "Unable to send invite. Please try again.");
+      }
+    }
   };
 
   const handleLogout = async () => {
@@ -46,9 +68,6 @@ const Profile = () => {
       console.log("User successfully logged out.");
 
       router.push("/(auth)/sign-in");
-
-      // Optionally navigate to the Welcome or Login screen
-      // Example: navigation.replace("Welcome");
     } catch (error) {
       console.error("Error during logout:", error);
     }
@@ -62,7 +81,7 @@ const Profile = () => {
     <SafeAreaView className="flex-1 bg-white p-5">
       <ScrollView
         contentContainerStyle={{ flexGrow: 1 }}
-        showsVerticalScrollIndicator={false} // Hide vertical scrollbar
+        showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
       >
         <Text className="text-2xl font-JakartaBold">Profile</Text>
@@ -115,22 +134,14 @@ const Profile = () => {
             </View>
           </View>
 
-          {/* logout button */}
+          {/* Logout Button */}
           <View className="mt-6 flex-1 justify-end w-24">
-            {/* <Button
-              title="Logout"
-              onPress={() => {
-                // Call the logout function
-                // This will clear the user data from the store and navigate to the login screen
-                logout();
-              }}
-            /> */}
             <Button title="Log out" onPress={handleLogout} />
           </View>
 
           {roleUser === "ADMIN" ? (
             <>
-              <View className="h-72 w-full mt-4 border bg-[#F5F9FF] border-[#61A2FE] drop-shadow-2xl ">
+              <View className="h-72 w-full mt-4 mb-32 border bg-[#F5F9FF] border-[#61A2FE] drop-shadow-2xl ">
                 {/* Invite Form Section */}
                 <View className="w-full h-full rounded-md flex-col justify-evenly items-center ">
                   <View className="h-full w-[94%] flex-col justify-around overflow-hidden">
@@ -194,9 +205,7 @@ const Profile = () => {
                 </View>
               </View>
             </>
-          ) : (
-            " "
-          )}
+          ) : null}
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -204,6 +213,3 @@ const Profile = () => {
 };
 
 export default Profile;
-function removeToken() {
-  throw new Error("Function not implemented.");
-}

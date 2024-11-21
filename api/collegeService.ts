@@ -168,6 +168,24 @@ const collegeService = {
       throw error;
     }
   },
+  inviteUser: async (formData: {
+    email: string;
+    role: string;
+    base_url_client: string;
+  }) => {
+    console.log("test", formData);
+
+    try {
+      const response = await api.post(`/user/invite`, formData);
+      return response.data;
+    } catch (error: any) {
+      console.log(
+        "Error Inviting User:",
+        error.response?.data || error.message
+      );
+      throw error;
+    }
+  },
 };
 
 export default collegeService;
