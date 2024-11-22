@@ -53,3 +53,10 @@ export interface SessionValues {
   lectureId: string;
   isActive: true;
 }
+
+export interface Attendance {
+  studentId: string;
+  lectureId: string;
+  attendanceCode: string;
+  isPresent: boolean;
+}

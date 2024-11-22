@@ -37,6 +37,8 @@ const Home = () => {
       setLoadingMessage("Loading Data...");
       try {
         const response = await collegeService.getUserData();
+        console.log("User Data:", response);
+
         setUser(response.user); // Store user data in Zustand
         const responseLecture = await collegeService.getLectureData();
 
@@ -49,7 +51,7 @@ const Home = () => {
     };
 
     fetchUserData();
-  }, [setUser]);
+  }, []);
 
   const handleSubmit = async () => {
     setLoading(true);
@@ -98,11 +100,15 @@ const Home = () => {
           );
         }
       } catch (error: any) {
+        showCustomToast(
+          "error",
+          error.response?.data.message || "Failed to create lecture"
+        );
         console.log(
           "Error creating lecture:",
           error.response?.data || error.message
         );
-        showCustomToast("error", error.message || "Failed to create lecture");
+        console.log(error.response?.data.message);
       }
     }
     setLoading(false);
@@ -169,29 +175,34 @@ const Home = () => {
                 />
               </View>
             ) : (
-              <View className="mt-4 h-[380px] w-full rounded-xl mx-auto mt-4 bg-[#FFFFFF] shadow-lg rounded-lg mb-40 flex-col items-center">
-                <View className="h-[90%] w-[95%]  flex-col  justify-evenly overflow-hidden">
-                  <InputField
-                    label="Subject Name"
-                    placeholder="Enter Subject Name"
-                    icon={icons.person}
-                    value={subject}
-                    onChangeText={setSubject}
-                    className="w-full h-full"
-                    containerStyle="bg-white"
-                  />
-                  <DateTimeInput
-                    setStartTime={setStartTime}
-                    setEndTime={setEndTime}
-                  />
-                  <CustomButton
-                    title="Submit"
-                    onPress={handleSubmit}
-                    className="rounded-lg mt-2 shadow-none"
-                    bgVariant="secondary"
-                  />
+              <>
+                <Text className="text-2xl font-JakartaSemiBold text-slate-700 mt-6  ">
+                  Create Lecture
+                </Text>
+                <View className="mt-1 h-[380px] w-full  mx-auto  bg-[#FFFFFF] shadow-lg rounded-lg mb-40 flex-col items-center">
+                  <View className="h-[90%] w-[95%]  flex-col  justify-evenly overflow-hidden">
+                    <InputField
+                      label="Subject Name"
+                      placeholder="Enter Subject Name"
+                      icon={icons.person}
+                      value={subject}
+                      onChangeText={setSubject}
+                      className="w-full h-full"
+                      containerStyle="bg-white"
+                    />
+                    <DateTimeInput
+                      setStartTime={setStartTime}
+                      setEndTime={setEndTime}
+                    />
+                    <CustomButton
+                      title="Submit"
+                      onPress={handleSubmit}
+                      className="rounded-lg mt-2 shadow-none"
+                      bgVariant="secondary"
+                    />
+                  </View>
                 </View>
-              </View>
+              </>
             )}
           </View>
 

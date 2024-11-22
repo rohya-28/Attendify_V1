@@ -129,7 +129,17 @@ const Profile = () => {
                   Organization ID
                 </Text>
                 <Text className="text-sm text-gray-900">
-                  {user.organizationId}
+                  {user.organizationId._id}
+                </Text>
+              </View>
+
+              {/* organization name  */}
+              <View className="py-3 flex-row justify-between">
+                <Text className="text-sm font-medium text-gray-500">
+                  Organization Name
+                </Text>
+                <Text className="text-sm text-gray-900">
+                  {user.organizationName}
                 </Text>
               </View>
 

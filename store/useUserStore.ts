@@ -9,7 +9,8 @@ interface User {
   phoneNumber: string;
   profilePic: string;
   role: string;
-  organizationId: string;
+  organizationId: object;
+  organizationName: string;
 }
 
 interface UserStore {

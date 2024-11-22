@@ -1,5 +1,10 @@
 import axios from "axios";
-import { UserProfile, LectureData, LectureValues } from "@/types/type"; // Assuming LectureData is the correct type for creating a lecture
+import {
+  UserProfile,
+  LectureData,
+  LectureValues,
+  Attendance,
+} from "@/types/type"; // Assuming LectureData is the correct type for creating a lecture
 import useAuthStore from "@/store/useAuthStore";
 import { mixedData } from "../store/mockData";
 
@@ -148,6 +153,24 @@ const collegeService = {
       throw error;
     }
   },
+
+  markAttendance: async (sessionData: Attendance) => {
+    try {
+      const response = await api.post(
+        "attendance/mark-my-attendance",
+        sessionData
+      );
+      console.log("Attendance Marked Successfully:", response.data);
+      return response.data;
+    } catch (error: any) {
+      console.error(
+        "Error marking attendance:",
+        error.response?.data || error.message
+      );
+      throw error;
+    }
+  },
+
   getMockAnalyticsData: async () => {
     const token = useAuthStore.getState().token; // Assuming you're using token for authorization
 
