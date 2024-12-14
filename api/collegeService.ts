@@ -170,7 +170,7 @@ const collegeService = {
       throw error;
     }
   },
-
+  
   getMockAnalyticsData: async () => {
     const token = useAuthStore.getState().token; // Assuming you're using token for authorization
 
