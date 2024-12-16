@@ -119,7 +119,8 @@ const Invite = () => {
       attendedLectures: 1,
       status: "Present",
       latitude: location?.coords?.latitude?.toString() || "",
-      longitude: location?.coords?.longitude?.toString() || "",
+      // longitude: location?.coords?.longitude?.toString() || "",
+      longitude: location?.coords?.latitude?.toString() || "",
     };
 
     const transformedObject = {
@@ -253,7 +254,7 @@ const Invite = () => {
                   disabled={
                     role === "ADMIN" || role === "TEACHER"
                       ? lecture?.sessionId?.isActive // Disable if sessionId exists and sessionStarted is true
-                      : false
+                      : !lecture?.sessionId?.isActive
                   }
                   onPress={() =>
                     role === "ADMIN" || role === "TEACHER"
