@@ -48,6 +48,8 @@ const Sign_Up = () => {
   const [isVerified, setIsVerified] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  console.log("Role:", role);
+
   // Function to toggle role between student and admin
   const toggleRole = () => {
     setRole((prevRole) => (prevRole === "STUDENT" ? "ADMIN" : "STUDENT"));
@@ -347,7 +349,8 @@ const Sign_Up = () => {
                     ""
                   )}
                   {/* trigger yup validation onpress next */}
-                  {!isVerified ? (
+                  {/* {!isVerified ? ( */}
+                  {!isVerified && role !== "STUDENT" ? (
                     <Link
                       href="/(auth)/collegeInfo"
                       className="font-JakartaSemiBold text-[15px] text-general-200 mt-8 text-center"

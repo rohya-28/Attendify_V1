@@ -42,8 +42,10 @@ const Profile = () => {
         role,
         base_url_client: "http://localhost:2002/",
       };
+      console.log("role", role);
 
       const response = await collegeService.inviteUser(payload);
+      console.log("role", role);
 
       if (response.message === "User invited") {
         Alert.alert("Success", `Invite sent to ${values.email} as ${role}`);
